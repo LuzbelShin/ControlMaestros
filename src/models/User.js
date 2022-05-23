@@ -10,15 +10,9 @@ const UserSchema = new Schema ({
     username: {type: String, require: true},
     password: {type: String, require: true},
     phone: {type: String, required: false},
-    email:[
-        {
-            type: String, required: false, kind: "Institucional"
-        }, {
-            type: String, required: false, kind: "Plantel"
-        },{
-            type: String, required: false, kind: "Personal"
-        }
-    ],
+    email_i:{type: String, required: false},
+    email_personal:{type: String, required: false},
+    email_p:{type: String, required: false},
     address:{type: String, required: false},
     admission:{type: Date, required: false },
     curp:{type: String, required: false},

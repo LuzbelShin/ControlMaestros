@@ -1,69 +1,59 @@
 <div class="container">
-    <div class="card-header text-white profile">
-        Perfil
-    </div>
-    <div class="form">
+    <div class="card">
 
-        <div class="card-group">
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
-                    Informaci&oacute;n personal
-                </div>
+        <div class="row">
+            <div class="col-sm-5">
+                <img src="../../public/img/profileTakodachi.png" class="rounded" alt="Imagen de perfil">
+
+                <button type="button" class="btn btn-primary btn-block my-2">
+                    Cambiar foto de perfil
+                </button>
+                <button type="submit" class="btn btn-primary btn-block my-2">
+                    Guardar cambios
+                </button>
+
+            </div>
+            <div class="col">
+
                 <div class="card-body">
                     <div>
-                        <a>Nombre: </a>
+                        <a>Nombre</a>
                         <input type="text" class="form-control my-1" value={{name}}>
                     </div>
                     <div>
-                        <a>Apellido paterno: </a>
+                        <a>Apellido paterno</a>
                         <input type="text" class="form-control my-1" value={{last_name}}>
                     </div>
                     <div>
-                        <a>Apellido materno: </a>
+                        <a>Apellido materno</a>
                         <input type="text" class="form-control my-1" value={{second_last_name}}>
                     </div>
                     <div>
-                        <a>N&uacute;mero telef&oacute;nico: </a>
+                        <a>N&uacute;mero telef&oacute;nico</a>
                         <input type="tel" class="form-control my-1" value={{phone}}>
                     </div>
                     <div>
-                        <a>Direcci&oacute;n: </a>
+                        <a>Direcci&oacute;n</a>
                         <input type="text" class="form-control my-1" value={{address}}>
                     </div>
                     <div>
-                        <a>Curp: </a>
+                        <a>Curp</a>
                         <input type="text" class="form-control my-1" value={{curp}}>
                     </div>
                     <div>
-                        <a>RFC: </a>
+                        <a>RFC</a>
                         <input type="text" class="form-control my-1" value={{rfc}}>
                     </div>
                 </div>
             </div>
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
-                    Correos electr&oacute;nicos
-                </div>
-                <div class="card-body">
-                    <div>
-                        <a>Correo Institucional: </a>
-                        <input type="email" class="form-control my-1" value=>
-                    </div>
-                    <div>
-                        <a>Correo Plantel: </a>
-                        <input type="email" class="form-control my-1">
-                    </div>
-                    <div>
-                        <a>Correo Personal: </a>
-                        <input type="email" class="form-control my-1">
-                    </div>
-                </div>
-            </div>
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
+
+        </div>
+        <div class="col">
+            <div class="card border-white">
+                <h5 class="card-title">
                     Informaci&oacute;n del plantel
-                </div>
-                <div class="card-body">
+                </h5>
+                <div class="card-body pt-1">
                     <div>
                         <a class="pt-1">Fecha de ingreso: </a>
                         <input type="date" class="form-control my-1" value={{admission}}>
@@ -89,8 +79,7 @@
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-block my-2">
-            Guardar cambios
-        </button>
     </div>
+
+</div>
 </div>

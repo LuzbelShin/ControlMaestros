@@ -1,96 +1,101 @@
 <div class="container">
-    <div class="card-header text-white profile">
-        Perfil
-    </div>
-    <div class="form">
-
-        <div class="card-group">
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
-                    Informaci&oacute;n personal
-                </div>
-                <div class="card-body">
-                    <div>
-                        <a>Nombre: </a>
-                        <input type="text" class="form-control my-1" value={{name}}>
-                    </div>
-                    <div>
-                        <a>Apellido paterno: </a>
-                        <input type="text" class="form-control my-1" value={{last_name}}>
-                    </div>
-                    <div>
-                        <a>Apellido materno: </a>
-                        <input type="text" class="form-control my-1" value={{second_last_name}}>
-                    </div>
-                    <div>
-                        <a>N&uacute;mero telef&oacute;nico: </a>
-                        <input type="tel" class="form-control my-1" value={{phone}}>
-                    </div>
-                    <div>
-                        <a>Direcci&oacute;n: </a>
-                        <input type="text" class="form-control my-1" value={{address}}>
-                    </div>
-                    <div>
-                        <a>Curp: </a>
-                        <input type="text" class="form-control my-1" value={{curp}}>
-                    </div>
-                    <div>
-                        <a>RFC: </a>
-                        <input type="text" class="form-control my-1" value={{rfc}}>
-                    </div>
-                </div>
+    <div class="jumbotron mt-4" style="background-color: #FFFFFF;">
+        <div class="row">
+            <div class="col-sm-5">
+                <img src="../../public/img/profileTakodachi.png" class="rounded" alt="Imagen de perfil">
+                </img>
+                <button type="submit" class="btn btn-primary btn-block my-2">
+                    Editar perfil
+                </button>
             </div>
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
-                    Correos electr&oacute;nicos
-                </div>
+            <div class="col">
                 <div class="card-body">
                     <div>
-                        <a>Correo Institucional: </a>
-                        <input type="email" class="form-control my-1" value=>
+                        <a>Nombre</a>
+                        <input type="text" class="form-control my-1" value="{{user.name}}">
                     </div>
                     <div>
-                        <a>Correo Plantel: </a>
-                        <input type="email" class="form-control my-1">
+                        <a>Apellido paterno</a>
+                        <input type="text" class="form-control my-1" value="{{user.last_name}}">
                     </div>
                     <div>
-                        <a>Correo Personal: </a>
-                        <input type="email" class="form-control my-1">
-                    </div>
-                </div>
-            </div>
-            <div class="card px-auto border-dark">
-                <div class="card-header bg-dark text-white">
-                    Informaci&oacute;n del plantel
-                </div>
-                <div class="card-body">
-                    <div>
-                        <a class="pt-1">Fecha de ingreso: </a>
-                        <input type="date" class="form-control my-1" value={{admission}}>
+                        <a>Apellido materno</a>
+                        <input type="text" class="form-control my-1" value="{{user.second_last_name}}">
                     </div>
                     <div>
-                        <a class="ml-2">Perfil Principal: </a>
-                        <input type="text" class="form-control my-1" value={{profile}}>
+                        <a>N&uacute;mero telef&oacute;nico</a>
+                        <input type="tel" class="form-control my-1" value="{{user.phone}}">
                     </div>
                     <div>
-                        <a class="ml-2">Grado máximo de estudios: </a>
-                        <select name="academicDegree" id="academicDegree" class="form-control my-1">
-                            <option value="licenciatura">
-                                Licenciatura
-                            </option>
-                            <option value="maestria">
-                                Maestr&iacute;a
-                            </option>
-                            <option value="doctorado">
-                                Doctorado
-                            </option>
-                        </select>
+                        <a>Direcci&oacute;n</a>
+                        <input type="text" class="form-control my-1" value="{{user.address}}">
+                    </div>
+                    <div>
+                        <a>Curp</a>
+                        <input type="text" class="form-control my-1" value="{{user.curp}}">
+                    </div>
+                    <div>
+                        <a>RFC</a>
+                        <input type="text" class="form-control my-1" value="{{user.rfc}}">
                     </div>
                 </div>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-block my-2">
-            Editar perfil
-        </button>
+        </br>
+        <div class="row">
+            <div class="col">
+                <div class="card border-white">
+                    <h5 class="card-title ml-3">
+                        Lista de correos electr&oacute;nicos
+                    </h5>
+                    <div class="card-body ml-1 pt-2">
+                        <div>
+                            <a>Correo Institucional</a>
+                            <input type="email" class="form-control my-1" value="{{user.email_i}}">
+                        </div>
+                        <div>
+                            <a>Correo Plantel: </a>
+                            <input type="email" class="form-control my-1" value="{{user.email_p}}">
+                        </div>
+                        <div>
+                            <a>Correo Personal: </a>
+                            <input type="email" class="form-control my-1" value="{{user.email_personal}}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card border-white">
+                    <h5 class="card-title ml-1">
+                        Informaci&oacute;n del plantel
+                    </h5>
+                    <div class="card-body ml-0 pt-1">
+                        <div>
+                            <a class="">Fecha de ingreso: </a>
+            
+                            <input type="date" class="form-control my-1" value="{{user.admission}}">
+                        </div>
+                        <div>
+                            <a class="">Perfil Principal: </a>
+                            <input type="text" class="form-control my-1" value="{{user.profile}}">
+                        </div>
+                        <div>
+                            <a class="">Grado máximo de estudios: </a>
+                            <select name="academicDegree" id="academicDegree" class="form-control my-1" >
+                                <option value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria">
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado">
+                                    Doctorado
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
