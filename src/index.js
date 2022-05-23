@@ -5,8 +5,6 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 const flash = require('connect-flash');
 const passport = require('passport');
-const moment = require('moment');
-const momentHbs = require('handlebars.moment');
 
 // Initiliazations
 const app = express();
@@ -27,7 +25,6 @@ app.engine('.hbs', exphbs.engine({
     extname: '.hbs'
 }));
 app.set('view engine', '.hbs');
-momentHbs.registerHelpers(exphbs);
 
 // Middlewares
 app.use(express.urlencoded({extended: false}));
