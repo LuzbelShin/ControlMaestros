@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand" href="/">Control Escolar</a>
+        <a class="navbar-brand" href="/">Servicios Docentes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -17,7 +17,7 @@
             <ul class="navbar-nav ml-auto">
                 {{#if user}}
                 <li class="nav-item active">
-                    <a class="nav-link" href="../users/profile">Perfil</a>
+                    <a class="nav-link" href="/users/profile">Perfil</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -28,15 +28,15 @@
                         <a class="dropdown-item" href="/notes">All Notes</a>
                         <a class="dropdown-item" href="/notes/add">Add Note</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/users/logout">Log Out</a>
+                        <a class="dropdown-item" href="/logout">Log Out</a>
                     </div>
                 </li>
                 {{else}}
                 <li class="nav-item active">
-                    <a class="nav-link" href="../users/signin">Ingresar <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/login">Ingresar <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/users/signup">Registrarse </a>
+                    <a class="nav-link" href="/signup">Registrarse </a>
                 </li>
                 {{/if}}
             </ul>
