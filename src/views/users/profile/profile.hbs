@@ -1,8 +1,11 @@
 <div class="container">
     <div class="jumbotron mt-4" style="background-color: #FFFFFF;">
+        <h3 class="card-title mx-auto my-auto py-auto" style="width: 200px;">
+            Perfil
+        </h3>
         <div class="row">
             <div class="col-sm-5 ">
-                <form action="/users/profile/edit" method="post">
+                <form action="/users/profile/edit" method="get">
                     <img src="../../public/img/profileTakodachi.png" class="rounded" alt="Imagen de perfil">
                     </img>
                     <button type="submit" class="btn btn-primary btn-block my-2">
@@ -82,7 +85,7 @@
                         </div>
                         <div>
                             <a class="">Grado máximo de estudios: </a>
-                            <select name="academicDegree" id="academicDegree" class="form-control my-1" disabled>
+                            <select name="study_degree" id="academicDegree" class="form-control my-1" disabled>
                                     {{#if degree.[0]}}
                                         <option value="Licenciatura" selected>
                                             Licenciatura
