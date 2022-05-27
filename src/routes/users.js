@@ -6,6 +6,15 @@ const moment = require('moment');
 
 const { isAuthenticated } = require('../helpers/auth');
 
+const cloudinary = require('cloudinary');
+const fs = require('fs-extra');
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 router.get('/login', (req, res) => {
     res.render('users/login/signin');
 });
@@ -81,7 +90,7 @@ router.get('/users/profile', isAuthenticated, async (req, res) => {
     res.render('users/profile/profile', { degree, admissionFormat });
 });
 
-router.get('/users/profile/edit', isAuthenticated, async (req, res) => {
+router.get('/users/profile/edit/?:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     var degree = [];
     var degree1 = false;
@@ -107,7 +116,7 @@ router.get('/users/profile/edit', isAuthenticated, async (req, res) => {
     res.render('users/profile/edit_profile', { user, degree, admissionFormat });
 });
 
-router.put('/users/profile/edit_profile/:id', isAuthenticated, async (req, res) => {
+router.put('/users/profile/edit/:id', isAuthenticated, async (req, res) => {
     const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree } = req.body;
     const errors = [];
     //VALIDATIONS

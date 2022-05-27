@@ -19,7 +19,9 @@ const UserSchema = new Schema ({
     rfc:{type: String, required: false},
     profile:{type: String, required: false},
     study_degree:{type: String, required: false},
-    date: {type: Date, default: Date.now }
+    date: {type: Date, default: Date.now },
+    imageURL: {type: String},
+    public_id: {type: String}
 });
 
 UserSchema.methods.encryptPassword = async (password) =>{
