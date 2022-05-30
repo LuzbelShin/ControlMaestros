@@ -134,42 +134,42 @@ router.put('/users/profile/edit/:id', isAuthenticated, async (req, res) => {
     var rCurp = regexCurp.test(curp);
     var rRFC = regexRFC.test(rfc);
     var rProfessionalProfile = regexTitle.test(professional_profile);
-    if(!rName){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
+    if (!rName) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
         console.log('1');
     }
-    if(!rLastname){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
+    if (!rLastname) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
         console.log('2');
     }
-    if(!rSLastname){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
+    if (!rSLastname) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
         console.log('3');
     }
-    if(!rPhone){
-        errors.push({text: 'Por favor ingresa un n&uacute;mero de tel&eacute;fono valido'});
+    if (!rPhone) {
+        errors.push({ text: 'Por favor ingresa un n&uacute;mero de tel&eacute;fono valido' });
         console.log('4');
     }
-    if(!rAddress){
-        errors.push({text: 'Por favor ingresa una direcci&oacute; valida'});
+    if (!rAddress) {
+        errors.push({ text: 'Por favor ingresa una direcci&oacute; valida' });
         console.log('5');
     }
-    if(!rCurp){
-        errors.push({text: 'Por favor ingresa una CURP valida'});
+    if (!rCurp) {
+        errors.push({ text: 'Por favor ingresa una CURP valida' });
         console.log('6');
     }
-    if(!rRFC){
-        errors.push({text: 'Por favor ingresa un RFC valido'});
+    if (!rRFC) {
+        errors.push({ text: 'Por favor ingresa un RFC valido' });
         console.log('7');
     }
-    if(!rProfessionalProfile){
-        errors.push({text: 'Por favor ingresa un t&iacute;tulo valido'});
+    if (!rProfessionalProfile) {
+        errors.push({ text: 'Por favor ingresa un t&iacute;tulo valido' });
         console.log('8');
     }
     //Este If no sirve, preguntar al Eliu
-    if(errors.length > 0){
-        res.render('/users/profile/edit_profile/', {errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree});
-    }else{
+    if (errors.length > 0) {
+        res.render('/users/profile/edit_profile/', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree });
+    } else {
         await User.findByIdAndUpdate(req.params.id, {
             name, last_name, second_last_name, phone, address, curp, rfc,
             email_i, email_p, email_personal, admission, professional_profile, study_degree
@@ -177,6 +177,55 @@ router.put('/users/profile/edit/:id', isAuthenticated, async (req, res) => {
         req.flash('success_msg', 'Cambios realizados exitosamente');
         res.redirect('/users/profile');
     }
+});
+
+router.get('/users/profile/edit/profile_picture/:id', isAuthenticated, async (req, res) => {
+    const user = await User.findById(req.user.id);
+    const preview = true;
+    //
+    var degree = [];
+    var degree1 = false;
+    var degree2 = false;
+    var degree3 = false;
+    if (user['study_degree'] == "Licenciatura") {
+        degree1 = true;
+        degree2 = false;
+        degree3 = false;
+    } else if (user['study_degree'] == "Maestria") {
+        degree1 = false;
+        degree2 = true;
+        degree3 = false;
+    } else if (user['study_degree'] == "Doctorado") {
+        degree1 = false;
+        degree2 = false;
+        degree3 = true;
+    }
+    degree.push(degree1);
+    degree.push(degree2);
+    degree.push(degree3);
+    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+//
+    //Aqui tiene que actualziar sin recargar
+    res.render('users/profile/edit_profile', { user, degree, admissionFormat , preview});
+});
+
+router.post('/users/profile/edit/profile_picture/:id', isAuthenticated, async (req, res) => {
+
+    console.log(req.file != null);
+    if (req.file != null) {
+
+        const result = await cloudinary.v2.uploader.upload(req.file.path);
+        const public_id = result.public_id;
+        const imageURL = result.secure_url;
+        //Aqui tiene que actualziar sin recargar para que la preview cargue
+
+        await User.findByIdAndUpdate(req.params.id, { imageURL, public_id });
+
+        await fs.unlink(req.file.path);
+    }
+
+
+
 });
 
 module.exports = router;

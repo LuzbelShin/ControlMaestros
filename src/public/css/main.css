@@ -25,3 +25,10 @@ input.form-control:read-only{
 select.form-control:disabled{
     background-color: rgb(255, 255, 255);
 }
+
+img {
+    width: 180px;
+    height: 200px;
+    margin:0 auto;
+    display:block;
+  }
