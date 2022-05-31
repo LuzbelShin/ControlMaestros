@@ -3,33 +3,27 @@
 
         <div class="row">
             <div class="col-sm-5 px-auto">
-                <div class="row">
-                    <div class="col">
-                        <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil"
-                            id="profileP">
-                    </div>
-                    {{#if preview}}
-                    <div class="preview col">
-                        <img id="preview" class="rounded center mt-4 mb-3">
-                    </div>
-                    {{/if}}
-                </div>
+
+                <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil" id="profileP">
+
 
                 <!-- Modificar al presionar el boton debe aparecer el input para la imagen, un boton para cancelar y una preview de la imagen
                     posible ayuda para que aparezcan los botones https://www.freecodecamp.org/news/html-button-onclick-javascript-click-event-tutorial/    
                     preview https://www.youtube.com/watch?v=JeQZwDM84xI&ab_channel=MysteryCode
                     preview menos visual https://www.groundtutorial.com/2022/04/preview-image-before-upload.html-->
-
                 {{#if preview}}
-                <form action="/users/profile/edit/profile_picture/{{user._id}}" method="post"
+
+
+                <form action="/users/profile/update_profile_picture/{{user._id}}" method="post"
                     enctype="multipart/form-data">
                     <div class="input-group">
                         <div class="custom-file">
                             <input type="file" name="image" accept="image/*" class="custom-file-input"
-                                id="inputProfileP">
+                                id="inputProfileP" onchange="updateProfilePicture(event);">
                             <label for="inputGroupFile" class="custom-file-label">Elige una imagen</label>
                         </div>
                     </div>
+
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Cambiar foto de perfil
                     </button>
@@ -38,19 +32,17 @@
                     </a>
                 </form>
                 {{else}}
-                <form action="/users/profile/edit/profile_picture/{{user._id}}" method="get">
+                <form action="/users/profile/update_profile_picture/{{user._id}}" method="get">
                     <div class="form-group">
-                        <button class="btn btn-primary btn-block my-2">
+                        <button class="btn btn-primary btn-block my-2" id="buttonPP">
                             Cambiar foto de perfil
                         </button>
                     </div>
                 </form>
-                <form action="/users/profile/edit_profile/{{user.id}}?_method=put" method="post">
-                    <input type="hidden" name="_method" value="put">
+                <form action="/users/profile/edit/{{user.id}}" method="post">
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Guardar cambios
                     </button>
-
 
                     <a href="/users/profile" class="btn btn-danger btn-block">
                         Cancelar
@@ -60,7 +52,6 @@
                 {{/if}}
 
                 <!------------------------------------>
-
 
             </div>
             <div class="col">
@@ -173,6 +164,16 @@
                                     Maestr&iacute;a
                                 </option>
                                 <option value="Doctorado" selected>
+                                    Doctorado
+                                </option>
+                                {{else}}
+                                <option value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria">
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado">
                                     Doctorado
                                 </option>
                                 {{/if}}
