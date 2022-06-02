@@ -14,7 +14,7 @@
                 {{#if preview}}
 
 
-                <form action="/users/profile/update_profile_picture/{{user._id}}" method="post"
+                <form action="/profile/update_profile_picture/{{user._id}}" method="post"
                     enctype="multipart/form-data">
                     <div class="input-group">
                         <div class="custom-file">
@@ -27,24 +27,25 @@
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Cambiar foto de perfil
                     </button>
-                    <a href="/users/profile/edit/{{user.id}}" class="btn btn-danger btn-block">
+                    <a href="/profile/edit/{{user.id}}" class="btn btn-danger btn-block">
                         Cancelar
                     </a>
                 </form>
                 {{else}}
-                <form action="/users/profile/update_profile_picture/{{user._id}}" method="get">
+                <form action="/profile/update_profile_picture/{{user._id}}" method="get">
                     <div class="form-group">
                         <button class="btn btn-primary btn-block my-2" id="buttonPP">
                             Cambiar foto de perfil
                         </button>
                     </div>
                 </form>
-                <form action="/users/profile/edit/{{user.id}}" method="post">
+
+                <form action="/profile/edit/{{user.id}}" method="post">
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Guardar cambios
                     </button>
 
-                    <a href="/users/profile" class="btn btn-danger btn-block">
+                    <a href="/profile" class="btn btn-danger btn-block">
                         Cancelar
                     </a>
 

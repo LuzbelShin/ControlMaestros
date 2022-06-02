@@ -17,7 +17,8 @@ require('./config/passport');
 // Settings
 app.set('port', process.env.PORT || 8000);
 app.set('views', path.join(__dirname, 'views'));
-app.engine('.hbs', exphbs.engine({
+
+const hbs = exphbs.create({
     defaultLayout: 'main',
     runtimeOptions: {
         allowProtoPropertiesByDefault: true,
@@ -26,7 +27,9 @@ app.engine('.hbs', exphbs.engine({
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
     extname: '.hbs'
-}));
+});
+
+app.engine('.hbs', hbs.engine);
 app.set('view engine', '.hbs');
 
 // Middlewares

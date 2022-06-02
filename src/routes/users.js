@@ -85,7 +85,7 @@ router.get('/logout', (req, res) => {
 /**
  * Render Profile, validations for degree and date maybe could be optimized
  */
-router.get('/users/profile', isAuthenticated, async (req, res) => {
+router.get('/profile', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     var degree = [];
     var degree1 = false;
@@ -114,7 +114,7 @@ router.get('/users/profile', isAuthenticated, async (req, res) => {
 /** 
  * Render profile so it can be updated, same validations
  */
-router.get('/users/profile/edit/?:id', isAuthenticated, async (req, res) => {
+router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     var degree = [];
     var degree1 = false;
@@ -137,13 +137,14 @@ router.get('/users/profile/edit/?:id', isAuthenticated, async (req, res) => {
     degree.push(degree2);
     degree.push(degree3);
     const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    console.log('Edit GET');
     res.render('users/profile/edit_profile', { user, degree, admissionFormat });
 });
 
 /**
  * Update info. NO PROFILE PICTURE INCLUDED
  */
-router.post('/users/profile/edit/:id', isAuthenticated, async (req, res) => {
+router.post('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree } = req.body;
     const id = req.user.id;
     const user = await User.findById(id);
@@ -165,50 +166,42 @@ router.post('/users/profile/edit/:id', isAuthenticated, async (req, res) => {
 
     if (!rName || name === '' || name === null) {
         errors.push({ text: 'Por favor ingresa un nombre valido' });
-        console.log('1');
     }
     if (!rLastname || last_name === '' || last_name === null) {
         errors.push({ text: 'Por favor ingresa un nombre valido' });
-        console.log('2');
     }
     if (!rSLastname || second_last_name === '' || second_last_name === null) {
         errors.push({ text: 'Por favor ingresa un nombre valido' });
-        console.log('3');
     }
     if (!rPhone || phone === '' || phone === null) {
-        errors.push({ text: 'Por favor ingresa un n&uacute;mero de tel&eacute;fono valido' });
-        console.log('4');
+        errors.push({ text: 'Por favor ingresa un número de teléfono valido' });
     }
     if (!rAddress || address == null || address === '') {
-        errors.push({ text: 'Por favor ingresa una direcci&oacute; valida' });
-        console.log('5');
+        errors.push({ text: 'Por favor ingresa una dirección valida' });
     }
     if (!rCurp || curp === '' || curp === null) {
         errors.push({ text: 'Por favor ingresa una CURP valida' });
-        console.log('6');
     }
     if (!rRFC || rfc === '' || rfc === null) {
         errors.push({ text: 'Por favor ingresa un RFC valido' });
-        console.log('7');
     }
 
     if (errors.length > 0) {
-        console.log(errors);
-        res.render('users/profile/edit/', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree });
+        res.render('users/profile/edit_profile', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree });
     } else {
         await User.findByIdAndUpdate(req.params.id, {
             name, last_name, second_last_name, phone, address, curp, rfc,
             email_i, email_p, email_personal, admission, professional_profile, study_degree
         });
         req.flash('success_msg', 'Cambios realizados exitosamente');
-        res.redirect('/users/profile');
+        res.redirect('/profile');
     }
 });
 
 /**
  * Change profile picture and show buttons
  */
-router.get('/users/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
+router.get('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     const preview = true;
     //
@@ -241,7 +234,7 @@ router.get('/users/profile/update_profile_picture/:id', isAuthenticated, async (
 /**
  * Change profile picture
  */
-router.post('/users/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
+router.post('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
     console.log(req.file != null);
     const user = await User.findById(req.user.id);
     var degree = [];
@@ -283,8 +276,12 @@ router.post('/users/profile/update_profile_picture/:id', isAuthenticated, async 
         res.render('users/profile/edit_profile', { errors, user, degree, admissionFormat, preview });
     }
 
-    res.redirect('/users/profile');
+    res.redirect('/profile');
     
+});
+
+router.get('/schedule', (req, res) =>{
+    res.render('users/activities/schedule');
 });
 
 module.exports = router;
