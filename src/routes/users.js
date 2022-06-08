@@ -4,7 +4,7 @@ const User = require('../models/User');
 const passport = require('passport');
 const moment = require('moment');
 
-const { isAuthenticated } = require('../helpers/auth');
+const { isAuthenticated } = require('../helpers/helpers');
 
 const cloudinary = require('cloudinary');
 const fs = require('fs-extra');

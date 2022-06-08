@@ -33,10 +33,18 @@ img {
     display:block;
   }
 
-  button.btn-secret{
+  img.logo{
+    width: 360px;
+    height: 120px;
+    margin:0 auto;
+    display:block;
+  }
+  a.btn-secret{
     background-color: rgb(255, 255, 255);
     width: 100%;
     height: 100%;
+    display: block;
+    padding: 0px;
   }
 
   th.th-text{
@@ -50,13 +58,63 @@ img {
     text-align: center;
   }
 
-  td.td-btn{
-    display:block;
-    width: 100%;
-    height: 100%;
-}
-
 td{   
     width: 80px;
     height: 40px;
+    border-collapse: collapse;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-left: 0px;
+    padding-bottom: 0px;
+    padding: 0px;
+}
+
+table{
+  border-collapse: collapse;
+}
+
+.table td {
+  padding: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  padding-left: 0px;
+  vertical-align: top;
+  border-top: 1px solid #dee2e6;
+}
+
+input.star {
+  border: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  opacity: 0;
+  float: right;
+}
+
+label.star{
+  position: relative;
+  float: right;
+  color: #c8c8c8;
+}
+
+label.star:before {
+  margin: 5px;
+  font-size: 1.5em;
+  color: var(--accent-color);
+}
+
+input.star:checked ~ label.star:before {
+  color: #FFC107;
+}
+
+label.star:hover ~ label.star:before {
+  color: #ffdb70;
+}
+
+label.star:hover:before {
+  color: #FFC107;
 }
