@@ -87,56 +87,17 @@ router.get('/logout', (req, res) => {
  */
 router.get('/profile', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    const { degree, admissionFormat } = validation(user);
     res.render('users/profile/profile', { degree, admissionFormat });
 });
 
 /** 
  * Render profile so it can be updated, same validations
+ * ?????????
  */
 router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    const { degree, admissionFormat } = validation(user);
     console.log('Edit GET');
     res.render('users/profile/edit_profile', { user, degree, admissionFormat });
 });
@@ -212,29 +173,7 @@ router.post('/profile/edit/:id', isAuthenticated, async (req, res) => {
 router.get('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     const preview = true;
-    //
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
-    //
+    const { degree, admissionFormat } = validation(user);
     //Aqui tiene que actualziar sin recargar
     res.render('users/profile/edit_profile', { user, degree, admissionFormat, preview });
 });
@@ -245,27 +184,8 @@ router.get('/profile/update_profile_picture/:id', isAuthenticated, async (req, r
 router.post('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
     console.log(req.file != null);
     const user = await User.findById(req.user.id);
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    
+    const { degree, admissionFormat } = validation(user);
     
     var errors = [];
     if (req.file != null) {
@@ -291,5 +211,30 @@ router.post('/profile/update_profile_picture/:id', isAuthenticated, async (req, 
 router.get('/schedule', (req, res) =>{
     res.render('users/activities/schedule');
 });
+
+function validation(user){
+    var degree = [];
+    var degree1 = false;
+    var degree2 = false;
+    var degree3 = false;
+    if (user['study_degree'] == "Licenciatura") {
+        degree1 = true;
+        degree2 = false;
+        degree3 = false;
+    } else if (user['study_degree'] == "Maestria") {
+        degree1 = false;
+        degree2 = true;
+        degree3 = false;
+    } else if (user['study_degree'] == "Doctorado") {
+        degree1 = false;
+        degree2 = false;
+        degree3 = true;
+    }
+    degree.push(degree1);
+    degree.push(degree2);
+    degree.push(degree3);
+    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    return { degree, admissionFormat };
+}
 
 module.exports = router;
