@@ -39,12 +39,29 @@ img {
     margin:0 auto;
     display:block;
   }
+
   a.btn-secret{
     background-color: rgb(255, 255, 255);
     width: 100%;
     height: 100%;
     display: block;
     padding: 0px;
+  }
+
+  a.btn-free{
+    background-color: rgb(255, 255, 255);
+  }
+
+  a.btn-occupied{
+    background-color: #fdff8a;
+  }
+
+  a.btn-occupied-selected{
+    background-color: #a13d56;
+  }
+
+  a.btn-selected{
+    background-color: #a13d56;
   }
 
   th.th-text{

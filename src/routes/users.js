@@ -143,6 +143,10 @@ router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
 
 /**
  * Update info. NO PROFILE PICTURE INCLUDED
+ * 
+ * 
+ * SOMETHING HAPPENED HERE!!!!!!!!!!!!!!!!!!!!!!
+ * CANT UPDATE UNDEFINED VALUES
  */
 router.post('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree } = req.body;
@@ -174,15 +178,19 @@ router.post('/profile/edit/:id', isAuthenticated, async (req, res) => {
         errors.push({ text: 'Por favor ingresa un nombre valido' });
     }
     if (!rPhone || phone === '' || phone === null) {
+        console.log(phone);
         errors.push({ text: 'Por favor ingresa un número de teléfono valido' });
     }
     if (!rAddress || address == null || address === '') {
+        console.log(address);
         errors.push({ text: 'Por favor ingresa una dirección valida' });
     }
     if (!rCurp || curp === '' || curp === null) {
+        console.log(curp);
         errors.push({ text: 'Por favor ingresa una CURP valida' });
     }
     if (!rRFC || rfc === '' || rfc === null) {
+        console.log(rfc);
         errors.push({ text: 'Por favor ingresa un RFC valido' });
     }
 
