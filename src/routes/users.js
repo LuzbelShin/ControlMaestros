@@ -8,6 +8,7 @@ const { isAuthenticated } = require('../helpers/auth');
 
 const cloudinary = require('cloudinary');
 const fs = require('fs-extra');
+const { $where } = require('../models/User');
 /**
  * Cloudinary Config
  */
@@ -28,7 +29,7 @@ router.get('/login', (req, res) => {
  * Sign In
  */
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
+    successRedirect: '/profile',
     failureRedirect: '/login/',
     failureFlash: true
 }));
@@ -45,8 +46,9 @@ router.get('/signup', (req, res) => {
  */
 router.post('/signup', async (req, res) => {
     const { name, last_name, second_last_name, username, password, confirm_password } = req.body;
-    console.log(req.body);
     const errors = [];
+    const regexName = /^\s*([A-Za-z]{1,}([\.,]? |[-']| ))+[A-Za-z]+\.?\s*$|\w+/;
+
     if (name.length <= 0 || username.length <= 0 || password.length <= 0
         || last_name.length <= 0) {
         errors.push({ text: 'Please fill all blank fields' });
@@ -57,6 +59,18 @@ router.post('/signup', async (req, res) => {
     if (password.length < 4) {
         errors.push({ text: 'Password should be at least 4 characters long.' });
     }
+
+    if (!regexName.test(name)) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
+    }
+    if (!regexName.test(last_name)) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
+    }
+    if (second_last_name.length > 0) {
+        if (!regexName.test(second_last_name)) {
+            errors.push({ text: 'Por favor ingresa un nombre valido' });
+        }
+    }
     if (errors.length > 0) {
         res.render('users/login/signup', { errors, name, last_name, second_last_name, username, password, confirm_password });
     } else {
@@ -64,6 +78,8 @@ router.post('/signup', async (req, res) => {
         if (emailUser) {
             req.flash('error_msg', 'The email is already in use');
             res.redirect('/login');
+            // errors.push({ text: 'The email is already in use' });
+            // res.render('users/login/signup', { errors, name, last_name, second_last_name });
         } else {
             const imageURL = 'https://res.cloudinary.com/dpar6bmfd/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max/v1654021505/149071_ddfsfq.png'
             const newUser = new User({ name, last_name, second_last_name, username, password, imageURL });
@@ -88,53 +104,43 @@ router.get('/logout', (req, res) => {
  */
 router.get('/profile', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    console.log(req.body);
-    const { degree, admissionFormat } = validation(user);
-    res.render('users/profile/profile', { degree, admissionFormat });
+    const { degree } = validation(user);
+    res.render('users/profile/profile', { degree });
 });
 
 /** 
  * Render profile so it can be updated, same validations
- * ?????????
+ * 
  */
 router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    const { degree, admissionFormat } = validation(user);
-    res.render('users/profile/edit_profile', { user, degree, admissionFormat });
+    const { degree, email } = validation(user);
+    var firsttime = firstTime(user);
+    res.render('users/profile/edit_profile', { user, degree, firsttime, email });
+
 });
 
 /**
- * Update info. NO PROFILE PICTURE INCLUDED
+ * Update info.
  * 
  */
 router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p,
-        email_personal, admission, professional_profile, study_degree } = req.body;
+        email_personal, admission, professional_profile, study_degree, check_email_i, check_email_p, check_email_personal
+    } = req.body;
     const id = req.user.id;
-    
-    const user = await User.findById(id);
-    
-    console.log(firstTime(user));
 
+    const user = await User.findById(id);
+
+    var firsttime = firstTime(user);
+    var favorite_email = '';
     const errors = [];
 
-    //VALIDATIONS
-    const regexName = /^\s*([A-Za-z]{1,}([\.,]? |[-']| ))+[A-Za-z]+\.?\s*$|\w+/;
     const regexPhone = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-    const regexAddress = /^[A-Za-z0-9#-\s]*$/;
+    const regexAddress = /^[A-Za-z0-9#.-\s]*$/;
     const regexCurp = /[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?/;
     const regexRFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
 
-
-    if (!regexName.test(name) || name === '' || name === null) {
-        errors.push({ text: 'Por favor ingresa un nombre valido' });
-    }
-    if (!regexName.test(last_name) || last_name === '' || last_name === null) {
-        errors.push({ text: 'Por favor ingresa un nombre valido' });
-    }
-    if (!regexName.test(second_last_name) || second_last_name === '' || second_last_name === null) {
-        errors.push({ text: 'Por favor ingresa un nombre valido' });
-    }
     if (!regexPhone.test(phone) || phone === '' || phone === null) {
         errors.push({ text: 'Por favor ingresa un número de teléfono valido' });
     }
@@ -147,60 +153,53 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     if (!regexRFC.test(rfc) || rfc === '' || rfc === null) {
         errors.push({ text: 'Por favor ingresa un RFC valido' });
     }
+    if (req.file != null && errors.length > 0) {
+        const result = await cloudinary.v2.uploader.upload(req.file.path);
+        const public_id = result.public_id;
+        const imageURL = result.secure_url;
+
+        await User.findByIdAndUpdate(req.params.id, { imageURL, public_id });
+        await fs.unlink(req.file.path);
+        const onlyImage = '/profile/edit/' + user._id;
+        res.redirect(onlyImage);
+    }
+    if (check_email_i == 'on') {
+        if (email_i != null && email_i != '') {
+            favorite_email = email_i
+        }
+    } else if (check_email_p == 'on') {
+        if (email_p != null && email_p != '') {
+            favorite_email = email_p
+        }
+    } else if (check_email_personal == 'on') {
+        if (email_personal != null && email_personal != '') {
+            favorite_email = email_personal
+        }
+    }
     if (errors.length > 0) {
-        console.log(errors);
-        res.render('users/profile/edit_profile', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree });
+        res.render('users/profile/edit_profile', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree, firsttime });
     } else {
-        await User.findByIdAndUpdate(req.params.id, {
-            name, last_name, second_last_name, phone, address, curp, rfc,
-            email_i, email_p, email_personal, admission, professional_profile, study_degree
-        });
+        if (req.file != null) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            const public_id = result.public_id;
+            const imageURL = result.secure_url;
+
+            await fs.unlink(req.file.path);
+            await User.findByIdAndUpdate(req.params.id, {
+                name, last_name, second_last_name, phone, address, curp, rfc,
+                email_i, email_p, email_personal, admission, professional_profile, study_degree, imageURL, public_id, favorite_email
+            });
+        } else {
+            await User.findByIdAndUpdate(req.params.id, {
+                name, last_name, second_last_name, phone, address, curp, rfc,
+                email_i, email_p, email_personal, admission, professional_profile, study_degree, favorite_email
+            });
+        }
         req.flash('success_msg', 'Cambios realizados exitosamente');
         res.redirect('/profile');
     }
 });
 
-/**
- * Change profile picture and show buttons
- 
-router.get('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
-    const user = await User.findById(req.user.id);
-    const preview = true;
-    const { degree, admissionFormat } = validation(user);
-    //Aqui tiene que actualziar sin recargar
-    res.render('users/profile/edit_profile', { user, degree, admissionFormat, preview });
-});
-
-/**
- * Change profile picture
- 
-router.post('/profile/update_profile_picture/:id', isAuthenticated, async (req, res) => {
-    console.log(req.file != null);
-    const user = await User.findById(req.user.id);
-    
-    const { degree, admissionFormat } = validation(user);
-    
-    var errors = [];
-    if (req.file != null) {
-        const result = await cloudinary.v2.uploader.upload(req.file.path);
-        const public_id = result.public_id;
-        const imageURL = result.secure_url;
-        //Aqui tiene que actualziar sin recargar para que la preview cargue
-
-        await User.findByIdAndUpdate(req.params.id, { imageURL, public_id });
-        await fs.unlink(req.file.path);
-        req.flash('success_msg', 'Imagen subida');
-    } else {
-        const preview = true;
-        errors.push('Por favor sube un archivo');
-
-        res.render('users/profile/edit_profile', { errors, user, degree, admissionFormat, preview });
-    }
-
-    res.redirect('/profile');
-    
-});
-*/
 router.get('/schedule', (req, res) => {
     res.render('users/activities/schedule');
 });
@@ -212,22 +211,54 @@ function validation(user) {
     var degree3 = false;
     if (user['study_degree'] == "Licenciatura") {
         degree1 = true;
-        degree2 = false;
-        degree3 = false;
     } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
         degree2 = true;
-        degree3 = false;
     } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
         degree3 = true;
     }
     degree.push(degree1);
     degree.push(degree2);
     degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
-    return { degree, admissionFormat };
+    var email = [];
+    var email1 = false;
+    var email2 = false;
+    var email3 = false;
+    var email4 = true;
+    const email_i = user['email_i'];
+    const email_p = user['email_p'];
+    const email_personal = user['email_personal'];
+    const favorite_email = user['favorite_email'];
+    if(favorite_email != null && favorite_email != ''){
+        console.log('favorite');
+        if (email_i != null && email_i != '') {
+            console.log('inst');
+            if(email_i == favorite_email){
+                email1 = true;
+                email4 = false;
+            }
+        }
+        if (email_p != null && email_p != '') {
+            console.log('plantel');
+            if(email_p == favorite_email){
+                email2 = true;
+                email4 = false;
+            }
+        }
+        if (email_personal != null && email_personal != '') {
+            console.log('personal');
+            if(email_personal == favorite_email){
+                email3 = true;
+                email4 = false;
+            }
+        }
+    }
+    
+    email.push(email1);
+    email.push(email2);
+    email.push(email3);
+    email.push(email4);
+    // const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    return { degree, email };
 }
 
 function firstTime(user) {
@@ -245,14 +276,14 @@ function firstTime(user) {
     const professional_profile = user.professional_profile;
     const study_degree = user.study_degree;
 
-    if (name != null || last_name != null || second_last_name != null || phone != null || address != null ||
-        curp != null || rfc != null || email_i != null || email_p != null || email_personal != null || 
-        admission != null || professional_profile != null || study_degree != null) {
+    if (name != null && last_name != null && second_last_name != null && phone == null &&
+        address == null && curp == null && rfc == null && email_i == null &&
+        email_p == null && email_personal == null && admission == null &&
+        professional_profile == null && study_degree == null) {
         return true;
     }
-    else {
-        return false;
-    }
+
+    return false;
 }
 
 module.exports = router;

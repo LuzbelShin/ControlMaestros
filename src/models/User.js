@@ -13,6 +13,9 @@ const UserSchema = new Schema ({
     email_i:{type: String, required: false},
     email_personal:{type: String, required: false},
     email_p:{type: String, required: false},
+    favorite_email: {
+        type: String, required: false
+    },
     address:{type: String, required: false},
     admission:{type: Date, required: false },
     curp:{type: String, required: false},
