@@ -17,7 +17,7 @@ const UserSchema = new Schema ({
         type: String, required: false
     },
     address:{type: String, required: false},
-    admission:{type: Date, required: false },
+    admission:{type: String, required: false },
     curp:{type: String, required: false},
     rfc:{type: String, required: false},
     profile:{type: String, required: false},

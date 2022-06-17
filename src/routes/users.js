@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const passport = require('passport');
-const moment = require('moment');
 
 const { isAuthenticated } = require('../helpers/auth');
 
@@ -29,7 +28,7 @@ router.get('/login', (req, res) => {
  * Sign In
  */
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/profile',
+    successRedirect: '/profile/:id',
     failureRedirect: '/login/',
     failureFlash: true
 }));
@@ -102,7 +101,7 @@ router.get('/logout', (req, res) => {
 /**
  * Render Profile, validations for degree and date maybe could be optimized
  */
-router.get('/profile', isAuthenticated, async (req, res) => {
+router.get('/profile/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
     const { degree } = validation(user);
     res.render('users/profile/profile', { degree });
@@ -132,6 +131,7 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
 
     const user = await User.findById(id);
 
+    console.log(user['admission']);
     var firsttime = firstTime(user);
     var favorite_email = '';
     const errors = [];
@@ -195,13 +195,10 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
                 email_i, email_p, email_personal, admission, professional_profile, study_degree, favorite_email
             });
         }
+        let profile = '/profile/' + user._id;
         req.flash('success_msg', 'Cambios realizados exitosamente');
-        res.redirect('/profile');
+        res.redirect(profile);
     }
-});
-
-router.get('/schedule', (req, res) => {
-    res.render('users/activities/schedule');
 });
 
 function validation(user) {
