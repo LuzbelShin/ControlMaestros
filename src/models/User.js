@@ -13,13 +13,18 @@ const UserSchema = new Schema ({
     email_i:{type: String, required: false},
     email_personal:{type: String, required: false},
     email_p:{type: String, required: false},
+    favorite_email: {
+        type: String, required: false
+    },
     address:{type: String, required: false},
-    admission:{type: Date, required: false },
+    admission:{type: String, required: false },
     curp:{type: String, required: false},
     rfc:{type: String, required: false},
     profile:{type: String, required: false},
     study_degree:{type: String, required: false},
-    date: {type: Date, default: Date.now }
+    date: {type: Date, default: Date.now },
+    imageURL: {type: String},
+    public_id: {type: String}
 });
 
 UserSchema.methods.encryptPassword = async (password) =>{

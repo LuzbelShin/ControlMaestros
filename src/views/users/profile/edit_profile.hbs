@@ -1,141 +1,436 @@
 <div class="container">
     <div class="jumbotron mt-4" style="background-color: #FFFFFF;">
-        <form action="/users/profile/edit_profile/{{user.id}}?_method=put" method="post">
-            <input type="hidden" name="_method" value="put">
+        <div class="row">
+            <div class="col-sm-5 px-auto">
                 <div class="row">
-                    <div class="col-sm-5 px-auto">
-
-                        <img src="../../public/img/profileTakodachi.png" class="rounded" alt="Imagen de perfil">
-
-                        <button type="button" class="btn btn-primary btn-block my-2">
-                            Cambiar foto de perfil
-                        </button>
-                        <button type="submit" class="btn btn-primary btn-block my-2">
-                            Guardar cambios
-                        </button>
-                        
-                            
-                                <a href="/users/profile" class="btn btn-danger btn-block">
-                                    Cancelar
-                                </a>
-                        
+                    <div class="col" id="picture">
+                        <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil"
+                            id="imageURL" name="imageURL">
                     </div>
-                    <div class="col">
-
-                        <div class="card-body">
-                            <div>
-                                <a>Nombre</a>
-                                <input type="text" class="form-control my-1" name="name" value="{{user.name}}">
-                            </div>
-                            <div>
-                                <a>Apellido paterno</a>
-                                <input type="text" class="form-control my-1" name="last_name" value="{{user.last_name}}">
-                            </div>
-                            <div>
-                                <a>Apellido materno</a>
-                                <input type="text" class="form-control my-1" name="second_last_name" value="{{user.second_last_name}}">
-                            </div>
-                            <div>
-                                <a>N&uacute;mero telef&oacute;nico</a>
-                                <input type="tel" class="form-control my-1" name="phone" value="{{user.phone}}">
-                            </div>
-                            <div>
-                                <a>Direcci&oacute;n</a>
-                                <input type="text" class="form-control my-1" name="address" value="{{user.address}}">
-                            </div>
-                            <div>
-                                <a>Curp</a>
-                                <input type="text" class="form-control my-1" name="curp" value="{{user.curp}}">
-                            </div>
-                            <div>
-                                <a>RFC</a>
-                                <input type="text" class="form-control my-1" name="rfc" value="{{user.rfc}}">
-                            </div>
-                        </div>
-                    </div>
-
                 </div>
-                <div class="row">
-                    <div class="col">
-                        <div class="card border-white">
+
+                <form action="/profile/edit/{{user.id}}?_method=put" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="_method" value="put">
+
+                    <button class="btn btn-primary btn-block my-2" id="inputProfileP">
+                        Cambiar foto de perfil
+                    </button>
+
+                    <button type="submit" class="btn btn-primary btn-block my-2" id="saveChanges">
+                        Guardar cambios
+                    </button>
+
+                    <a href="/profile/{{user.id}}" class="btn btn-danger btn-block" id="abort">
+                        Cancelar
+                    </a>
+
+            </div>
+            <div class="col">
+
+                <div class="card-body">
+                    <div>
+                        <a>Nombre</a>
+                        <input type="text" class="form-control my-1" id="name" name="name" value="{{user.name}}"
+                            readonly>
+                    </div>
+                    <div>
+                        <a>Apellido paterno</a>
+                        <input type="text" class="form-control my-1" id="last_name" name="last_name"
+                            value="{{user.last_name}}" readonly>
+                    </div>
+                    <div>
+                        <a>Apellido materno</a>
+                        <input type="text" class="form-control my-1" id="second_last_name" name="second_last_name"
+                            value="{{user.second_last_name}}" readonly>
+                    </div>
+                    <div>
+                        <a>N&uacute;mero telef&oacute;nico</a>
+                        <input type="tel" class="form-control my-1" id="phone" name="phone" value="{{user.phone}}">
+                    </div>
+                    <div>
+                        <a>Direcci&oacute;n</a>
+                        <input type="text" class="form-control my-1" id="address" name="address"
+                            value="{{user.address}}">
+                    </div>
+                    {{#if firsttime}}
+                    <div>
+                        <a>Curp</a>
+                        <input type="text" class="form-control my-1" id="curp" name="curp" value="{{user.curp}}">
+                    </div>
+                    <div>
+                        <a>RFC</a>
+                        <input type="text" class="form-control my-1" id="rfc" name="rfc" value="{{user.rfc}}">
+                    </div>
+                    {{else}}
+                    <div>
+                        <a>Curp</a>
+                        <input type="text" class="form-control my-1" id="curp" name="curp" value="{{user.curp}}"
+                            readonly>
+                    </div>
+                    <div>
+                        <a>RFC</a>
+                        <input type="text" class="form-control my-1" id="rfc" name="rfc" value="{{user.rfc}}" readonly>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card border-white">
+                    <div class="row">
+                        <div class="col-md-9">
                             <h5 class="card-title ml-3">
                                 Lista de correos electr&oacute;nicos
                             </h5>
-                            <div class="card-body ml-1 pt-2">
-                                <div>
-                                    <a>Correo Institucional</a>
-                                    <input type="email" class="form-control my-1" name="email_i" value="{{user.email_i}}">
-                                </div>
-                                <div>
-                                    <a>Correo Plantel: </a>
-                                    <input type="email" class="form-control my-1" name="email_p" value="{{user.email_p}}">
-                                </div>
-                                <div>
-                                    <a>Correo Personal: </a>
-                                    <input type="email" class="form-control my-1" name="email_personal" value="{{user.email_personal}}">
-                                </div>
-                            </div>
                         </div>
-                    </div>
-                    <div class="col">
-                        <div class="card border-white">
-                            <h5 class="card-title ml-1">
-                                Informaci&oacute;n del plantel
+                        <div class="col-md-3">
+                            <h5 class="card-title text-center">
+                                Favorito
                             </h5>
-                            <div class="card-body ml-0 pt-1">
-                                <div>
-                                    <a class="">Fecha de ingreso: </a>
-
-                                    <input type="date" class="form-control my-1" name="admission" value="{{admissionFormat}}">
+                        </div>
+                    </div>
+                    {{#if email.[0]}}
+                    <div class="card-body ml-1 pt-2">
+                        <div>
+                            <a>Correo Institucional:</a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_i" name="email_i"
+                                        value="{{user.email_i}}">
                                 </div>
-                                <div>
-                                    <a class="">Perfil Principal: </a>
-                                    <input type="text" class="form-control my-1" name="professional_profile" value="{{user.profile}}">
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_i" id="check_email_i" checked>
+                                    <label for="check_email_i" class="fas fa-star star mt-2 pr-2" id="label_check_email_i" ></label>
                                 </div>
-                                <div>
-                                    <a class="">Grado máximo de estudios: </a>
-                                    <select name="study_degree" id="academicDegree" class="form-control my-1">
-                                        {{#if degree.[0]}}
-                                        <option value="Licenciatura" selected>
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria">
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado">
-                                            Doctorado
-                                        </option>
-                                        {{/if}}
-
-                                        {{#if degree.[1]}}
-                                        <option value="Licenciatura">
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria" selected>
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado">
-                                            Doctorado
-                                        </option>
-                                        {{/if}}
-
-                                        {{#if degree.[2]}}
-                                        <option value="Licenciatura">
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria">
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado" selected>
-                                            Doctorado
-                                        </option>
-                                        {{/if}}
-                                    </select>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Plantel: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_p" name="email_p"
+                                        value="{{user.email_p}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_p" id="check_email_p" disabled>
+                                    <label for="check_email_p" class="fas fa-star star mt-2 pr-2" id="label_check_email_p" ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Personal: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_personal"
+                                        name="email_personal" value="{{user.email_personal}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_personal"
+                                        id="check_email_personal" disabled>
+                                    <label for="check_email_personal" class="fas fa-star star mt-2  pr-2" id="label_check_email_personal" ></label>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {{/if}}
+                    {{#if email.[1]}}
+                    <div class="card-body ml-1 pt-2">
+                        <div>
+                            <a>Correo Institucional:</a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_i" name="email_i"
+                                        value="{{user.email_i}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_i" id="check_email_i" disabled>
+                                    <label for="check_email_i" class="fas fa-star star mt-2 pr-2" id="label_check_email_i" ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Plantel: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_p" name="email_p"
+                                        value="{{user.email_p}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_p" id="check_email_p" checked>
+                                    <label for="check_email_p" class="fas fa-star star mt-2 pr-2" id="label_check_email_p" ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Personal: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_personal"
+                                        name="email_personal" value="{{user.email_personal}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_personal"
+                                        id="check_email_personal" disabled>
+                                    <label for="check_email_personal" class="fas fa-star star mt-2  pr-2" id="label_check_email_personal" ></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if email.[2]}}
+                <div class="card-body ml-1 pt-2">
+                        <div>
+                            <a>Correo Institucional:</a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_i" name="email_i"
+                                        value="{{user.email_i}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_i" id="check_email_i" disabled>
+                                    <label for="check_email_i" class="fas fa-star star mt-2 pr-2" id="label_check_email_i" ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Plantel: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_p" name="email_p"
+                                        value="{{user.email_p}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_p" id="check_email_p" disabled>
+                                    <label for="check_email_p" class="fas fa-star star mt-2 pr-2" id="label_check_email_p" ></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Personal: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_personal"
+                                        name="email_personal" value="{{user.email_personal}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_personal"
+                                        id="check_email_personal" checked>
+                                    <label for="check_email_personal" class="fas fa-star star mt-2  pr-2" id="label_check_email_personal" ></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{#if email.[3]}}
+                    <div class="card-body ml-1 pt-2">
+                        <div>
+                            <a>Correo Institucional:</a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_i" name="email_i"
+                                        value="{{user.email_i}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_i" id="check_email_i">
+                                    <label for="check_email_i" class="fas fa-star star mt-2 pr-2"
+                                        id="label_check_email_i"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Plantel: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_p" name="email_p"
+                                        value="{{user.email_p}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_p" id="check_email_p">
+                                    <label for="check_email_p" class="fas fa-star star mt-2 pr-2"
+                                        id="label_check_email_p"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <a>Correo Personal: </a>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <input type="email" class="form-control my-1" id="email_personal"
+                                        name="email_personal" value="{{user.email_personal}}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="checkbox" class="star" name="check_email_personal"
+                                        id="check_email_personal">
+                                    <label for="check_email_personal" class="fas fa-star star mt-2  pr-2"
+                                        id="label_check_email_personal"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {{/if}}
+
                 </div>
+            </div>
+            <div class="col">
+                <div class="card border-white">
+                    <h5 class="card-title ml-1">
+                        Informaci&oacute;n del plantel
+                    </h5>
+                    {{#if firsttime}}
+                    <div class="card-body ml-0 pt-1">
+                        <div>
+                            <a class="">Fecha de ingreso: </a>
+
+                            <input type="text" class="form-control my-1" id="admission" name="admission"
+                                value="{{user.admission}}">
+                        </div>
+                        <div>
+                            <a class="">Perfil Principal: </a>
+                            <input type="text" class="form-control my-1" id="professional_profile"
+                                name="professional_profile" value="{{user.profile}}">
+                        </div>
+                        <div>
+                            <a class="">Grado máximo de estudios: </a>
+                            <select name="study_degree" id="study_degree" class="form-control my-1">
+                                {{#if degree.[0]}}
+                                <option value="Licenciatura" selected>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria">
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado">
+                                    Doctorado
+                                </option>
+                                {{else}}
+                                {{#if degree.[1]}}
+                                <option value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" selected>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado">
+                                    Doctorado
+                                </option>
+                                {{else}}
+                                {{#if degree.[2]}}
+                                <option value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria">
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" selected>
+                                    Doctorado
+                                </option>
+                                {{else}}
+                                <option value="Licenciatura">
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria">
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado">
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                                {{/if}}
+                                {{/if}}
+
+
+
+                            </select>
+                        </div>
+                    </div>
+                    {{else}}
+                    <div>
+                        <div>
+                            <a class="">Fecha de ingreso: </a>
+                            <input type="text" class="form-control my-1" value="{{user.admission}}" readonly>
+                        </div>
+                        <div>
+                            <a class="">Perfil Principal: </a>
+                            <input type="text" class="form-control my-1" value="{{user.profile}}" readonly>
+                        </div>
+                        <div>
+                            <a class="">Grado máximo de estudios: </a>
+                            <select name="study_degree" id="academicDegree" class="form-control my-1" disabled>
+                                {{#if degree.[0]}}
+                                <option value="Licenciatura" selected>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" hidden>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" hidden>
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                                {{#if degree.[1]}}
+                                <option value="Licenciatura" hidden>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" selected>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" hidden>
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                                {{#if degree.[2]}}
+                                <option value="Licenciatura" hidden>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" hidden>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" selected>
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                            </select>
+                        </div>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
         </form>
     </div>
 </div>
+
+<script>
+    $('#inputProfileP').on('click', function (e) {
+        div = `<div class="custom-file">
+                    <input type="file" name="image" accept="image/*" class="custom-file-input"
+                        id="inputProfileP">
+                    <label for="inputGroupFile" class="custom-file-label">Elige una imagen</label>
+                </div>
+        `;
+        $('#inputProfileP').replaceWith($(div));
+    });
+
+    $('#check_email_i').change(function (e) {
+        $('#check_email_p').prop("disabled", function (i, v) { return !v; });
+        $('#check_email_personal').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_p').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_personal').prop("disabled", function (i, v) { return !v; });
+    });
+
+    $('#check_email_p').change(function (e) {
+        $('#check_email_i').prop("disabled", function (i, v) { return !v; });
+        $('#check_email_personal').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_i').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_personal').prop("disabled", function (i, v) { return !v; });
+    });
+
+    $('#check_email_personal').change(function (e) {
+        $('#check_email_i').prop("disabled", function (i, v) { return !v; });
+        $('#check_email_p').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_i').prop("disabled", function (i, v) { return !v; });
+        $('#label_check_email_p').prop("disabled", function (i, v) { return !v; });
+    });
+</script>

@@ -2,27 +2,52 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const passport = require('passport');
-const moment = require('moment');
 
 const { isAuthenticated } = require('../helpers/auth');
 
+const cloudinary = require('cloudinary');
+const fs = require('fs-extra');
+const { $where } = require('../models/User');
+/**
+ * Cloudinary Config
+ */
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+/**
+ * Sign In render
+ */
 router.get('/login', (req, res) => {
     res.render('users/login/signin');
 });
 
+/**
+ * Sign In
+ */
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
+    successRedirect: '/profile/:id',
     failureRedirect: '/login/',
     failureFlash: true
 }));
 
+/**
+ * Sign up render
+ */
 router.get('/signup', (req, res) => {
     res.render('users/login/signup');
 });
 
+/**
+ * Sign up
+ */
 router.post('/signup', async (req, res) => {
     const { name, last_name, second_last_name, username, password, confirm_password } = req.body;
     const errors = [];
+    const regexName = /^\s*([A-Za-z]{1,}([\.,]? |[-']| ))+[A-Za-z]+\.?\s*$|\w+/;
+
     if (name.length <= 0 || username.length <= 0 || password.length <= 0
         || last_name.length <= 0) {
         errors.push({ text: 'Please fill all blank fields' });
@@ -33,141 +58,229 @@ router.post('/signup', async (req, res) => {
     if (password.length < 4) {
         errors.push({ text: 'Password should be at least 4 characters long.' });
     }
+
+    if (!regexName.test(name)) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
+    }
+    if (!regexName.test(last_name)) {
+        errors.push({ text: 'Por favor ingresa un nombre valido' });
+    }
+    if (second_last_name.length > 0) {
+        if (!regexName.test(second_last_name)) {
+            errors.push({ text: 'Por favor ingresa un nombre valido' });
+        }
+    }
     if (errors.length > 0) {
         res.render('users/login/signup', { errors, name, last_name, second_last_name, username, password, confirm_password });
     } else {
         const emailUser = await User.findOne({ username: username });
         if (emailUser) {
             req.flash('error_msg', 'The email is already in use');
-            res.redirect('/users/login/signup');
+            res.redirect('/login');
+            // errors.push({ text: 'The email is already in use' });
+            // res.render('users/login/signup', { errors, name, last_name, second_last_name });
         } else {
-            const newUser = new User({ name, last_name, second_last_name, username, password });
+            const imageURL = 'https://res.cloudinary.com/dpar6bmfd/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max/v1654021505/149071_ddfsfq.png'
+            const newUser = new User({ name, last_name, second_last_name, username, password, imageURL });
             newUser.password = await newUser.encryptPassword(password);
             await newUser.save();
             req.flash('success_msg', 'You have been registered');
-            res.redirect('/users/login/signin')
+            res.redirect('/login')
         }
     }
 });
 
+/**
+ * Log out
+ */
 router.get('/logout', (req, res) => {
     req.logOut();
     res.redirect('/');
 });
 
-router.get('/users/profile', isAuthenticated, async (req, res) => {
+/**
+ * Render Profile, validations for degree and date maybe could be optimized
+ */
+router.get('/profile/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
-    res.render('users/profile/profile', { degree, admissionFormat });
+    const { degree } = validation(user);
+    res.render('users/profile/profile', { degree });
 });
 
-router.get('/users/profile/edit', isAuthenticated, async (req, res) => {
+/** 
+ * Render profile so it can be updated, same validations
+ * 
+ */
+router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);
-    var degree = [];
-    var degree1 = false;
-    var degree2 = false;
-    var degree3 = false;
-    if (user['study_degree'] == "Licenciatura") {
-        degree1 = true;
-        degree2 = false;
-        degree3 = false;
-    } else if (user['study_degree'] == "Maestria") {
-        degree1 = false;
-        degree2 = true;
-        degree3 = false;
-    } else if (user['study_degree'] == "Doctorado") {
-        degree1 = false;
-        degree2 = false;
-        degree3 = true;
-    }
-    degree.push(degree1);
-    degree.push(degree2);
-    degree.push(degree3);
-    const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
-    res.render('users/profile/edit_profile', { user, degree, admissionFormat });
+    const { degree, email } = validation(user);
+    var firsttime = firstTime(user);
+    res.render('users/profile/edit_profile', { user, degree, firsttime, email });
+
 });
 
-router.put('/users/profile/edit_profile/:id', isAuthenticated, async (req, res) => {
-    const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree } = req.body;
+/**
+ * Update info.
+ * 
+ */
+router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
+    const { name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p,
+        email_personal, admission, professional_profile, study_degree, check_email_i, check_email_p, check_email_personal
+    } = req.body;
+    const id = req.user.id;
+
+    const user = await User.findById(id);
+
+    console.log(user['admission']);
+    var firsttime = firstTime(user);
+    var favorite_email = '';
     const errors = [];
-    //VALIDATIONS
-    const regexName = /^\s*([A-Za-z]{1,}([\.,]? |[-']| ))+[A-Za-z]+\.?\s*$|\w+/;
+
     const regexPhone = /^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$/;
-    const regexAddress = /^[A-Za-z0-9#-\s]*$/;
+    const regexAddress = /^[A-Za-z0-9#.-\s]*$/;
     const regexCurp = /[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?/;
     const regexRFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
-    const regexTitle = /^[a-zA-Z\s]*$/;
-    var rName = regexName.test(name);
-    var rLastname = regexName.test(last_name);
-    var rSLastname = regexName.test(second_last_name);
-    var rPhone = regexPhone.test(phone);
-    var rAddress = regexAddress.test(address);
-    var rCurp = regexCurp.test(curp);
-    var rRFC = regexRFC.test(rfc);
-    var rProfessionalProfile = regexTitle.test(professional_profile);
-    if(!rName){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
-        console.log('1');
+
+    if (!regexPhone.test(phone) || phone === '' || phone === null) {
+        errors.push({ text: 'Por favor ingresa un número de teléfono valido' });
     }
-    if(!rLastname){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
-        console.log('2');
+    if (!regexAddress.test(address) || address == null || address === '') {
+        errors.push({ text: 'Por favor ingresa una dirección valida' });
     }
-    if(!rSLastname){
-        errors.push({text: 'Por favor ingresa un nombre valido'});
-        console.log('3');
+    if (!regexCurp.test(curp) || curp === '' || curp === null) {
+        errors.push({ text: 'Por favor ingresa una CURP valida' });
     }
-    if(!rPhone){
-        errors.push({text: 'Por favor ingresa un n&uacute;mero de tel&eacute;fono valido'});
-        console.log('4');
+    if (!regexRFC.test(rfc) || rfc === '' || rfc === null) {
+        errors.push({ text: 'Por favor ingresa un RFC valido' });
     }
-    if(!rAddress){
-        errors.push({text: 'Por favor ingresa una direcci&oacute; valida'});
-        console.log('5');
+    if (req.file != null && errors.length > 0) {
+        const result = await cloudinary.v2.uploader.upload(req.file.path);
+        const public_id = result.public_id;
+        const imageURL = result.secure_url;
+
+        await User.findByIdAndUpdate(req.params.id, { imageURL, public_id });
+        await fs.unlink(req.file.path);
+        const onlyImage = '/profile/edit/' + user._id;
+        res.redirect(onlyImage);
     }
-    if(!rCurp){
-        errors.push({text: 'Por favor ingresa una CURP valida'});
-        console.log('6');
+    if (check_email_i == 'on') {
+        if (email_i != null && email_i != '') {
+            favorite_email = email_i
+        }
+    } else if (check_email_p == 'on') {
+        if (email_p != null && email_p != '') {
+            favorite_email = email_p
+        }
+    } else if (check_email_personal == 'on') {
+        if (email_personal != null && email_personal != '') {
+            favorite_email = email_personal
+        }
     }
-    if(!rRFC){
-        errors.push({text: 'Por favor ingresa un RFC valido'});
-        console.log('7');
-    }
-    if(!rProfessionalProfile){
-        errors.push({text: 'Por favor ingresa un t&iacute;tulo valido'});
-        console.log('8');
-    }
-    //Este If no sirve, preguntar al Eliu
-    if(errors.length > 0){
-        res.render('/users/profile/edit_profile/', {errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree});
-    }else{
-        await User.findByIdAndUpdate(req.params.id, {
-            name, last_name, second_last_name, phone, address, curp, rfc,
-            email_i, email_p, email_personal, admission, professional_profile, study_degree
-        });
+    if (errors.length > 0) {
+        res.render('users/profile/edit_profile', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, professional_profile, study_degree, firsttime });
+    } else {
+        if (req.file != null) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            const public_id = result.public_id;
+            const imageURL = result.secure_url;
+
+            await fs.unlink(req.file.path);
+            await User.findByIdAndUpdate(req.params.id, {
+                name, last_name, second_last_name, phone, address, curp, rfc,
+                email_i, email_p, email_personal, admission, professional_profile, study_degree, imageURL, public_id, favorite_email
+            });
+        } else {
+            await User.findByIdAndUpdate(req.params.id, {
+                name, last_name, second_last_name, phone, address, curp, rfc,
+                email_i, email_p, email_personal, admission, professional_profile, study_degree, favorite_email
+            });
+        }
+        let profile = '/profile/' + user._id;
         req.flash('success_msg', 'Cambios realizados exitosamente');
-        res.redirect('/users/profile');
+        res.redirect(profile);
     }
 });
+
+function validation(user) {
+    var degree = [];
+    var degree1 = false;
+    var degree2 = false;
+    var degree3 = false;
+    if (user['study_degree'] == "Licenciatura") {
+        degree1 = true;
+    } else if (user['study_degree'] == "Maestria") {
+        degree2 = true;
+    } else if (user['study_degree'] == "Doctorado") {
+        degree3 = true;
+    }
+    degree.push(degree1);
+    degree.push(degree2);
+    degree.push(degree3);
+    var email = [];
+    var email1 = false;
+    var email2 = false;
+    var email3 = false;
+    var email4 = true;
+    const email_i = user['email_i'];
+    const email_p = user['email_p'];
+    const email_personal = user['email_personal'];
+    const favorite_email = user['favorite_email'];
+    if(favorite_email != null && favorite_email != ''){
+        console.log('favorite');
+        if (email_i != null && email_i != '') {
+            console.log('inst');
+            if(email_i == favorite_email){
+                email1 = true;
+                email4 = false;
+            }
+        }
+        if (email_p != null && email_p != '') {
+            console.log('plantel');
+            if(email_p == favorite_email){
+                email2 = true;
+                email4 = false;
+            }
+        }
+        if (email_personal != null && email_personal != '') {
+            console.log('personal');
+            if(email_personal == favorite_email){
+                email3 = true;
+                email4 = false;
+            }
+        }
+    }
+    
+    email.push(email1);
+    email.push(email2);
+    email.push(email3);
+    email.push(email4);
+    // const admissionFormat = moment(user['admission']).add(1, 'day').format('YYYY-MM-DD');
+    return { degree, email };
+}
+
+function firstTime(user) {
+    const name = user.name;
+    const last_name = user.last_name;
+    const second_last_name = user.second_last_name;
+    const phone = user.phone;
+    const address = user.address;
+    const curp = user.curp;
+    const rfc = user.rfc;
+    const email_i = user.email_i;
+    const email_p = user.email_p;
+    const email_personal = user.email_personal;
+    const admission = user.admission;
+    const professional_profile = user.professional_profile;
+    const study_degree = user.study_degree;
+
+    if (name != null && last_name != null && second_last_name != null && phone == null &&
+        address == null && curp == null && rfc == null && email_i == null &&
+        email_p == null && email_personal == null && admission == null &&
+        professional_profile == null && study_degree == null) {
+        return true;
+    }
+
+    return false;
+}
 
 module.exports = router;

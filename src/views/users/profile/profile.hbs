@@ -5,9 +5,11 @@
         </h3>
         <div class="row">
             <div class="col-sm-5 ">
-                <form action="/users/profile/edit" method="get">
-                    <img src="../../public/img/profileTakodachi.png" class="rounded" alt="Imagen de perfil">
+                <form action="/profile/edit/{{user.id}}" method="get">
+                    
+                    <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil">
                     </img>
+                    
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Editar perfil
                     </button>
@@ -77,7 +79,7 @@
                     <div class="card-body ml-0 pt-1">
                         <div>
                             <a class="">Fecha de ingreso: </a>
-                            <input type="date" class="form-control my-1" value="{{admissionFormat}}" readonly>
+                            <input type="text" class="form-control my-1" value="{{user.admission}}" readonly>
                         </div>
                         <div>
                             <a class="">Perfil Principal: </a>
