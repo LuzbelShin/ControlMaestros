@@ -44,7 +44,7 @@ img.logo {
 }
 
 a.btn-secret {
-  background-color: rgb(255, 255, 255);
+  background-color: #ffffff;
   width: 100%;
   height: 100%;
   display: block;
@@ -119,6 +119,14 @@ label.star {
   position: relative;
   float: right;
   color: #c8c8c8;
+}
+
+label.mini-star {
+  color: #FFC107;
+}
+
+label.mini-star-secret {
+  color: #ffffff;
 }
 
 label.star:before {

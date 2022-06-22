@@ -6,10 +6,10 @@
         <div class="row">
             <div class="col-sm-5 ">
                 <form action="/profile/edit/{{user.id}}" method="get">
-                    
+
                     <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil">
                     </img>
-                    
+
                     <button type="submit" class="btn btn-primary btn-block my-2">
                         Editar perfil
                     </button>
@@ -19,36 +19,37 @@
                 <div class="card-body">
                     <div>
                         <a>Nombre</a>
-                        <input type="text" class="form-control my-1" value="{{user.name}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.name}}" readonly disabled>
                     </div>
                     <div>
                         <a>Apellido paterno</a>
-                        <input type="text" class="form-control my-1" value="{{user.last_name}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.last_name}}" readonly disabled>
                     </div>
                     <div>
                         <a>Apellido materno</a>
-                        <input type="text" class="form-control my-1" value="{{user.second_last_name}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.second_last_name}}" readonly
+                            disabled>
                     </div>
                     <div>
                         <a>N&uacute;mero telef&oacute;nico</a>
-                        <input type="tel" class="form-control my-1" value="{{user.phone}}" readonly>
+                        <input type="tel" class="form-control my-1" value="{{user.phone}}" readonly disabled>
                     </div>
                     <div>
                         <a>Direcci&oacute;n</a>
-                        <input type="text" class="form-control my-1" value="{{user.address}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.address}}" readonly disabled>
                     </div>
                     <div>
                         <a>Curp</a>
-                        <input type="text" class="form-control my-1" value="{{user.curp}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.curp}}" readonly disabled>
                     </div>
                     <div>
                         <a>RFC</a>
-                        <input type="text" class="form-control my-1" value="{{user.rfc}}" readonly>
+                        <input type="text" class="form-control my-1" value="{{user.rfc}}" readonly disabled>
                     </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <div class="col">
                 <div class="card border-white">
@@ -57,16 +58,33 @@
                     </h5>
                     <div class="card-body ml-1 pt-2">
                         <div>
-                            <a>Correo Institucional</a>
-                            <input type="email" class="form-control my-1" value="{{user.email_i}}" readonly>
+                            <a>Correo Institucional </a>
+                            {{#if email.[0]}}
+                            <label id="ministarIns" class="fas fa-star mini-star"></label>
+                            {{else}}
+                            <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
+                            {{/if}}
+                            <input type="email" class="form-control my-1" value="{{user.email_i}}" readonly disabled>
+                        </div>
+                        
+                        <div>
+                            <a>Correo Plantel  </a>
+                            {{#if email.[1]}}
+                            <label id="ministarIns" class="fas fa-star mini-star"></label>
+                            {{else}}
+                            <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
+                            {{/if}}
+                            <input type="email" class="form-control my-1" value="{{user.email_p}}" readonly disabled>
                         </div>
                         <div>
-                            <a>Correo Plantel: </a>
-                            <input type="email" class="form-control my-1" value="{{user.email_p}}" readonly>
-                        </div>
-                        <div>
-                            <a>Correo Personal: </a>
-                            <input type="email" class="form-control my-1" value="{{user.email_personal}}" readonly>
+                            <a>Correo Personal </a>
+                            {{#if email.[2]}}
+                            <label id="ministarIns" class="fas fa-star mini-star"></label>
+                            {{else}}
+                            <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
+                            {{/if}}
+                            <input type="email" class="form-control my-1" value="{{user.email_personal}}" readonly
+                                disabled>
                         </div>
                     </div>
                 </div>
@@ -79,48 +97,48 @@
                     <div class="card-body ml-0 pt-1">
                         <div>
                             <a class="">Fecha de ingreso: </a>
-                            <input type="text" class="form-control my-1" value="{{user.admission}}" readonly>
+                            <input type="text" class="form-control my-1" value="{{user.admission}}" readonly disabled>
                         </div>
                         <div>
                             <a class="">Perfil Principal: </a>
-                            <input type="text" class="form-control my-1" value="{{user.profile}}" readonly>
+                            <input type="text" class="form-control my-1" value="{{user.profile}}" readonly disabled>
                         </div>
                         <div>
                             <a class="">Grado máximo de estudios: </a>
                             <select name="study_degree" id="academicDegree" class="form-control my-1" disabled>
-                                    {{#if degree.[0]}}
-                                        <option value="Licenciatura" selected>
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria" hidden>
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado" hidden>
-                                            Doctorado
-                                        </option>
-                                    {{/if}}
-                                    {{#if degree.[1]}}
-                                        <option value="Licenciatura" hidden>
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria" selected>
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado" hidden>
-                                            Doctorado
-                                        </option>
-                                    {{/if}}
-                                    {{#if degree.[2]}}
-                                    <option value="Licenciatura" hidden>
-                                            Licenciatura
-                                        </option>
-                                        <option value="Maestria" hidden>
-                                            Maestr&iacute;a
-                                        </option>
-                                        <option value="Doctorado" selected>
-                                            Doctorado
-                                        </option>
-                                    {{/if}}
+                                {{#if degree.[0]}}
+                                <option value="Licenciatura" selected>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" hidden>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" hidden>
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                                {{#if degree.[1]}}
+                                <option value="Licenciatura" hidden>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" selected>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" hidden>
+                                    Doctorado
+                                </option>
+                                {{/if}}
+                                {{#if degree.[2]}}
+                                <option value="Licenciatura" hidden>
+                                    Licenciatura
+                                </option>
+                                <option value="Maestria" hidden>
+                                    Maestr&iacute;a
+                                </option>
+                                <option value="Doctorado" selected>
+                                    Doctorado
+                                </option>
+                                {{/if}}
                             </select>
                         </div>
                     </div>

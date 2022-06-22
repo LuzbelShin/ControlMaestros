@@ -26,7 +26,18 @@ const hbs = exphbs.create({
     },
     layoutsDir: path.join(app.get('views'), 'layouts'),
     partialsDir: path.join(app.get('views'), 'partials'),
-    extname: '.hbs'
+    extname: '.hbs',
+    helpers: {
+        licenciatura: function(value){
+            return value == 'Licenciatura';
+        },
+        maestria: function(value){
+            return value == 'Maestria';
+        }, 
+        doctorado: function(value){
+            return value == 'Doctorado';
+        }
+    }
 });
 
 app.engine('.hbs', hbs.engine);
@@ -50,7 +61,8 @@ const storage = multer.diskStorage({
         cb(null, new Date().getTime() + path.extname(file.originalname));
     }
 });
-app.use(multer({storage}).single('image'));
+//app.use(multer({storage}).single('image'));
+app.use(multer({storage}).array('files'));
 app.use(flash());
 
 // Global Variables
@@ -65,6 +77,7 @@ app.use((req, res, next) => {
 // Routes
 app.use(require('./routes/index'));
 app.use(require('./routes/schedule'));
+app.use(require('./routes/mail'));
 app.use(require('./routes/users'));
 
 // Static Files
