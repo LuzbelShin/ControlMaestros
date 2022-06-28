@@ -16,7 +16,6 @@ button.btn-primary {
 }
 
 div.profile {
-
   background-color: #7D0B26;
   border-color: #7D0B26;
 }
@@ -42,6 +41,33 @@ img.logo {
   margin: 0 auto;
   display: block;
 }
+
+img.navbar {
+  width: 40px;
+  height: 40px;
+  margin: 0px;
+  padding: 0px;
+} 
+
+.dropdown-toggle {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  position: fixed;
+  right: 20px;
+  bottom: 45%;
+}
+
+.headerDivider {
+  border-left:1px solid #38546d; 
+  border-right:1px solid #16222c; 
+  height:80px;
+  position:absolute;
+  right:249px;
+  top:10px; 
+}
+
 
 a.btn-secret {
   background-color: #ffffff;

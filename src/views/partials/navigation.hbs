@@ -16,24 +16,23 @@
             </ul>
             <ul class="navbar-nav ml-auto">
                 {{#if user}}
-                <li class="nav-item active">
-                    <a class="nav-link" href="/profile/{{user.id}}">Perfil</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/schedule">Horario</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Notes
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/notes">All Notes</a>
-                        <a class="dropdown-item" href="/notes/add">Add Note</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/logout">Log Out</a>
-                    </div>
-                </li>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src={{user.imageURL}} class="rounded-circle navbar">
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" href="/profile/{{user.id}}">Perfil</a>
+                            <a class="dropdown-item" <!--href="/schedule" -->Horario</a>
+                            {{#if (admin user)}}
+                            <a class="dropdown-item" href="/email/{{user.id}}">Enviar correo</a>
+                            {{/if}}
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/logout">Salir</a>
+                        </div>
+                    </li>
+                </ul>
                 {{else}}
                 <li class="nav-item active">
                     <a class="nav-link" href="/login">Ingresar <span class="sr-only">(current)</span></a>

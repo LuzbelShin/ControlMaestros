@@ -5,6 +5,23 @@
                 <div class="card-body">
                     <form action="/sendEmail" method="post" enctype="multipart/form-data">
                         <div class="form-group">
+                            <div class="row">
+                                <div class="col-2.5">
+                                    <label for="mailSelect" class="pl-3 py-1">Enviar a: </label>
+                                </div>
+                                <div class="col">
+                                    <select name="mailSelect" id="mailSelect" class="form-control py-1">
+                                        <option value="Favoritos" selected>
+                                            Correo Favorito
+                                        </option>
+                                        <option value="Institucionales">
+                                            Correo Institucional
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <input type="text" name="subject" class="form-control" placeholder="Asunto" autofocus>
                         </div>
                         <div class="form-group">

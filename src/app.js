@@ -36,6 +36,9 @@ const hbs = exphbs.create({
         }, 
         doctorado: function(value){
             return value == 'Doctorado';
+        },
+        admin: function(value){
+            return value.admin == true;
         }
     }
 });
