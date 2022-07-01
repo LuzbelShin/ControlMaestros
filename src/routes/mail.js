@@ -9,7 +9,6 @@ const router = express.Router();
 
 router.get('/email/:id', isAuthenticated, async (req, res) => {
     const id = req.user.id;
-
     const user = await User.findById(id);
 
     if(user['admin']){
@@ -23,10 +22,9 @@ router.post('/sendEmail', isAuthenticated, async (req, res) => {
     const { subject, message, mailSelect } = req.body;
     const errors = [];
     const contentHTML = `
-    <p>${message}</p>
+        <p>${message}</p>
     `;
     const files = req.files;
-
     var mails = [];
     if(mailSelect == 'Favoritos'){
         mails = await correosFavoritos();
@@ -38,9 +36,7 @@ router.post('/sendEmail', isAuthenticated, async (req, res) => {
     const clientSecret = process.env.CLIENT_SECRET;
     const redirectURI = process.env.REDIRECT_URI;
     const refreshToken = process.env.REFRESH_TOKEN;
-    
     const oAuth2Client = new google.auth.OAuth2(clientID, clientSecret, redirectURI);
-
     oAuth2Client.setCredentials({refresh_token: refreshToken});
 
     async function sendMail(subject, files, contentHTML){
@@ -79,7 +75,6 @@ router.post('/sendEmail', isAuthenticated, async (req, res) => {
     if(message == null && message == ''){
         errors.push({ text: 'Favor de introducir un mensaje' });
     }
-
     if (errors.length > 0) {
         res.render('users/activities/mail', { errors, subject, message, files });
     } else {
@@ -106,4 +101,5 @@ function clean(array){
     });
     return array;
 }
+
 module.exports = router;

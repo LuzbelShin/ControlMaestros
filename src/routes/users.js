@@ -281,7 +281,6 @@ function firstTime(user) {
         profile == null && study_degree == null) {
         return true;
     }
-
     return false;
 }
 
@@ -303,4 +302,5 @@ function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_em
     }
     return favorite_email;
 }
+
 module.exports = router;
