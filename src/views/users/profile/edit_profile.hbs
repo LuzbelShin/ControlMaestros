@@ -8,25 +8,19 @@
                             id="imageURL" name="imageURL">
                     </div>
                 </div>
-
                 <form action="/profile/edit/{{user.id}}?_method=put" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="_method" value="put">
-
                     <button class="btn btn-primary btn-block my-2" id="inputProfileP">
                         Cambiar foto de perfil
                     </button>
-
                     <button type="submit" class="btn btn-primary btn-block" id="saveChanges">
                         Guardar cambios
                     </button>
-
                     <a href="/profile/{{user.id}}" class="btn btn-danger btn-block" id="abort">
                         Cancelar
                     </a>
-
             </div>
             <div class="col">
-
                 <div class="card-body">
                     <div>
                         <a>Nombre</a>
@@ -91,7 +85,6 @@
                     {{/if}}
                 </div>
             </div>
-
         </div>
         <div class="row">
             <div class="col">
