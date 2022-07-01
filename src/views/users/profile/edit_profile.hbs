@@ -387,23 +387,188 @@
     });
 
     $('#check_email_i').change(function (e) {
-        $('#check_email_p').prop("disabled", function (i, v) { return !v; });
-        $('#check_email_personal').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_p').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_personal').prop("disabled", function (i, v) { return !v; });
+        if ($('#check_email_i').is(":checked")) {
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+        }
+        else if ($('#check_email_p').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+
+        } else if ($('#check_email_personal').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+        } else {
+            if ($('#email_i').val().length > 0) {
+                $('#check_email_i').prop("disabled", false);
+                $('#label_check_email_i').prop("disabled", false);
+            }
+            if ($('#email_p').val().length > 0) {
+                $('#check_email_p').prop("disabled", false);
+                $('#label_check_email_p').prop("disabled", false);
+            }
+            if ($('#email_personal').val().length > 0) {
+                $('#check_email_personal').prop("disabled", false);
+                $('#label_check_email_personal').prop("disabled", false);
+            }
+        }
     });
 
     $('#check_email_p').change(function (e) {
-        $('#check_email_i').prop("disabled", function (i, v) { return !v; });
-        $('#check_email_personal').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_i').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_personal').prop("disabled", function (i, v) { return !v; });
+        if ($('#check_email_i').is(":checked")) {
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+        }
+        else if ($('#check_email_p').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+
+        } else if ($('#check_email_personal').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+        } else {
+            if ($('#email_i').val().length > 0) {
+                $('#check_email_i').prop("disabled", false);
+                $('#label_check_email_i').prop("disabled", false);
+            }
+            if ($('#email_p').val().length > 0) {
+                $('#check_email_p').prop("disabled", false);
+                $('#label_check_email_p').prop("disabled", false);
+            }
+            if ($('#email_personal').val().length > 0) {
+                $('#check_email_personal').prop("disabled", false);
+                $('#label_check_email_personal').prop("disabled", false);
+            }
+        }
     });
 
     $('#check_email_personal').change(function (e) {
-        $('#check_email_i').prop("disabled", function (i, v) { return !v; });
-        $('#check_email_p').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_i').prop("disabled", function (i, v) { return !v; });
-        $('#label_check_email_p').prop("disabled", function (i, v) { return !v; });
+        if ($('#check_email_i').is(":checked")) {
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+        }
+        else if ($('#check_email_p').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+
+        } else if ($('#check_email_personal').is(":checked")) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+        } else {
+            if ($('#email_i').val().length > 0) {
+                $('#check_email_i').prop("disabled", false);
+                $('#label_check_email_i').prop("disabled", false);
+            }
+            if ($('#email_p').val().length > 0) {
+                $('#check_email_p').prop("disabled", false);
+                $('#label_check_email_p').prop("disabled", false);
+            }
+            if ($('#email_personal').val().length > 0) {
+                $('#check_email_personal').prop("disabled", false);
+                $('#label_check_email_personal').prop("disabled", false);
+            }
+        }
+    });
+
+    $(function () {
+        if ($('#email_i').val().length == 0) {
+            $('#check_email_i').prop("disabled", true);
+            $('#label_check_email_i').prop("disabled", true);
+        }
+        if ($('#email_p').val().length == 0) {
+            $('#check_email_p').prop("disabled", true);
+            $('#label_check_email_p').prop("disabled", true);
+        }
+        if ($('#email_personal').val().length == 0) {
+            $('#check_email_personal').prop("disabled", true);
+            $('#label_check_email_personal').prop("disabled", true);
+        }
+    });
+
+    $('#email_i').change(function (e) {
+        if ($('#email_i').val().length == 0) {
+            $('#check_email_i').prop("disabled", true);
+            $('#check_email_i').prop("checked", false);
+            $('#label_check_email_i').prop("disabled", true);
+        }
+        if ($('#email_i').val().length > 0) {
+            if ($('#check_email_i').is(":checked")) {
+                $('#check_email_i').prop("disabled", false);
+                $('#label_check_email_i').prop("disabled", false);
+            } else if ($('#check_email_p').is(":checked")) {
+                $('#check_email_i').prop("disabled", true);
+                $('#label_check_email_i').prop("disabled", true);
+            } else if ($('#check_email_personal').is(":checked")) {
+                $('#check_email_i').prop("disabled", true);
+                $('#label_check_email_i').prop("disabled", true);
+            } else {
+                $('#check_email_i').prop("disabled", false);
+                $('#label_check_email_i').prop("disabled", false);
+            }
+        }
+    });
+
+    $('#email_p').change(function (e) {
+        if ($('#email_p').val().length == 0) {
+            $('#check_email_p').prop("disabled", true);
+            $('#check_email_p').prop("checked", false);
+            $('#label_check_email_p').prop("disabled", true);
+        }
+        if ($('#email_p').val().length > 0) {
+            if ($('#check_email_i').is(":checked")) {
+                $('#check_email_p').prop("disabled", true);
+                $('#label_check_email_p').prop("disabled", true);
+            } else if ($('#check_email_p').is(":checked")) {
+                $('#check_email_p').prop("disabled", false);
+                $('#label_check_email_p').prop("disabled", false);
+            } else if ($('#check_email_personal').is(":checked")) {
+                $('#check_email_p').prop("disabled", true);
+                $('#label_check_email_p').prop("disabled", true);
+            } else {
+                $('#check_email_p').prop("disabled", false);
+                $('#label_check_email_p').prop("disabled", false);
+            }
+        }
+    });
+
+    $('#email_personal').change(function (e) {
+        if ($('#email_personal').val().length == 0) {
+            $('#check_email_personal').prop("disabled", true);
+            $('#check_email_personal').prop("checked", false);
+            $('#label_check_email_personal').prop("disabled", true);
+        }
+        if ($('#email_personal').val().length > 0) {
+            if ($('#check_email_i').is(":checked")) {
+                $('#check_email_personal').prop("disabled", true);
+                $('#label_check_email_personal').prop("disabled", true);
+            } else if ($('#check_email_p').is(":checked")) {
+                $('#check_email_personal').prop("disabled", true);
+                $('#label_check_email_personal').prop("disabled", true);
+            } else if ($('#check_email_personal').is(":checked")) {
+                $('#check_email_personal').prop("disabled", false);
+                $('#label_check_email_personal').prop("disabled", false);
+            } else {
+                $('#check_email_personal').prop("disabled", false);
+                $('#label_check_email_personal').prop("disabled", false);
+            }
+        }
     });
 </script>

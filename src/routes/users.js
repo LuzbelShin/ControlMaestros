@@ -28,11 +28,24 @@ router.get('/login', (req, res) => {
  * Sign In
  */
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/profile/:id',
+    successRedirect: '/',
     failureRedirect: '/login/',
     failureFlash: true
 }));
 
+router.get('/login/google', passport.authenticate('auth.google', {
+    scope: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email",
+    ],
+    session: false,
+}));
+
+router.get('/oauth2/redirect/google', passport.authenticate('auth.google', { 
+    successRedirect: '/',
+    failureRedirect: '/login', 
+    failureMessage: true 
+}));
 /**
  * Sign up render
  */
@@ -80,8 +93,7 @@ router.post('/signup', async (req, res) => {
             // errors.push({ text: 'The email is already in use' });
             // res.render('users/login/signup', { errors, name, last_name, second_last_name });
         } else {
-            const imageURL = 'https://res.cloudinary.com/dpar6bmfd/image/upload/w_1000,c_fill,ar_1:1,g_auto,r_max/v1654021505/149071_ddfsfq.png'
-            const newUser = new User({ name, last_name, second_last_name, username, password, imageURL });
+            const newUser = new User({ name, last_name, second_last_name, username, password});
             newUser.password = await newUser.encryptPassword(password);
             await newUser.save();
             req.flash('success_msg', 'Ha sido registrado');
@@ -139,7 +151,7 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     const regexAddress = /^[A-Za-z0-9#.-\s]*$/;
     const regexCurp = /[\A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{2}[BCDFGHJKLMNPQRSTVWXYZ]{3}([A-Z]{2})?([0-9]{2})?/;
     const regexRFC = /^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/;
-    const regexDate =  /^(0?[1-9]|1[0-9]|2[0-4])([\-/])\d{4}$/;
+    const regexDate = /^(0?[1-9]|1[0-9]|2[0-4])([\-/])\d{4}$/;
 
     if (!regexPhone.test(phone) || phone === '' || phone === null) {
         errors.push({ text: 'Favor de ingresar un número de teléfono valido' });
@@ -147,14 +159,14 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     if (!regexAddress.test(address) || address == null || address === '') {
         errors.push({ text: 'Favor de ingresar una dirección valida' });
     }
-    if(firsttime){
+    if (firsttime) {
         if (!regexCurp.test(curp) || curp === '' || curp === null) {
             errors.push({ text: 'Favor de ingresar una CURP valida' });
         }
         if (!regexRFC.test(rfc) || rfc === '' || rfc === null) {
             errors.push({ text: 'Favor de ingresar un RFC valido' });
         }
-        if(!regexDate.test(admission) || admission === '' || admission === null){
+        if (!regexDate.test(admission) || admission === '' || admission === null) {
             errors.push({ text: 'Favor de ingresar una quincena valida' });
         }
     }
@@ -170,7 +182,6 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
         res.redirect(onlyImage);
     }
     if (errors.length > 0) {
-        console.log(study_degree)
         res.render('users/profile/edit_profile', { errors, name, last_name, second_last_name, phone, address, curp, rfc, email_i, email_p, email_personal, admission, profile, study_degree, firsttime });
     } else {
         if (req.files.length != 0) {
@@ -220,27 +231,27 @@ function validation(user) {
     const email_p = user['email_p'];
     const email_personal = user['email_personal'];
     const favorite_email = user['favorite_email'];
-    if(favorite_email != null && favorite_email != ''){
+    if (favorite_email != null && favorite_email != '') {
         if (email_i != null && email_i != '') {
-            if(email_i == favorite_email){
+            if (email_i == favorite_email) {
                 email1 = true;
                 email4 = false;
             }
         }
         if (email_p != null && email_p != '') {
-            if(email_p == favorite_email){
+            if (email_p == favorite_email) {
                 email2 = true;
                 email4 = false;
             }
         }
         if (email_personal != null && email_personal != '') {
-            if(email_personal == favorite_email){
+            if (email_personal == favorite_email) {
                 email3 = true;
                 email4 = false;
             }
         }
     }
-    
+
     email.push(email1);
     email.push(email2);
     email.push(email3);
@@ -274,7 +285,7 @@ function firstTime(user) {
     return false;
 }
 
-function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_email_p, check_email_personal){
+function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_email_p, check_email_personal) {
     var favorite_email = '';
 
     if (check_email_i == 'on') {
