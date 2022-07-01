@@ -1,24 +1,55 @@
 <div class="row">
-    <div class="col-md-4 mx-auto">
+    <div class="col-md-8 mx-auto">
         <div class="card mt-4 text-center">
             <div class="card-header bg-dark text-white">
                 <h2>Inicio de sesi&oacute;n</h2>
             </div>
-            <!--<img src="/public/img/logo.png" class="rounded-circle mx-auto d-block m-4 logo" alt="logo">-->
-            <i class="fas fa-user fa-6x mt-3"></i>
-            <div class="card-body">
-                <form action="/login" method="post">
-                    <div class="form-group">
-                        <input name="username" type="email" class="form-control" placeholder="Usuario" autofocus>
+            <div class="row">
+                <div class="col-md-6">
+                    <div id="gSignInWrapper" class="py-3">
+                        <h4 class="label">Ingresar con:</h4>
+                        <div class="py-4">
+                            {{!-- <div id="customBtn" class="customGPlusSignIn">
+                                <span class="icon"></span>
+                                <span class="buttonText">Google</span>
+                            </div> --}}
+
+                            <a href="/login/google" id="customBtn" class="customGPlusSignIn">
+                                <span class="icon"></span>
+                                <span class="buttonText">Google</span>
+                            </a>
+                        </div>
+                        <div class="mb-0">
+                            <span class="align-bottom">¿No tienes una cuenta?
+                                <a href="/signup">Registrarse</a>
+                            </span>
+
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <input type="password" name="password" class="form-control" placeholder="Contrase&ntilde;a">
+                    <div id="name"></div>
+                    <script>startApp();</script>
+                </div>
+                <div class="col-md-6 border-left">
+                    <i class="fas fa-user fa-6x mt-3"></i>
+                    <div class="card-body">
+                        <form action="/login" method="post">
+                            <div class="form-group">
+                                <input name="username" type="email" class="form-control" placeholder="Usuario"
+                                    autofocus>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" name="password" class="form-control"
+                                    placeholder="Contrase&ntilde;a">
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary btn-block mx-auto  ">Ingresar</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary btn-block mx-auto  ">Ingresar</button>
-                    </div>
-                </form>
+                </div>
             </div>
+            <!--<img src="/public/img/logo.png" class="rounded-circle mx-auto d-block m-4 logo" alt="logo">-->
+
         </div>
     </div>
 </div>

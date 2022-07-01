@@ -16,7 +16,6 @@ button.btn-primary {
 }
 
 div.profile {
-
   background-color: #7D0B26;
   border-color: #7D0B26;
 }
@@ -43,8 +42,35 @@ img.logo {
   display: block;
 }
 
+img.navbar {
+  width: 40px;
+  height: 40px;
+  margin: 0px;
+  padding: 0px;
+} 
+
+.dropdown-toggle {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  position: fixed;
+  right: 20px;
+  bottom: 45%;
+}
+
+.headerDivider {
+  border-left:1px solid #38546d; 
+  border-right:1px solid #16222c; 
+  height:80px;
+  position:absolute;
+  right:249px;
+  top:10px; 
+}
+
+
 a.btn-secret {
-  background-color: rgb(255, 255, 255);
+  background-color: #ffffff;
   width: 100%;
   height: 100%;
   display: block;
@@ -121,6 +147,14 @@ label.star {
   color: #c8c8c8;
 }
 
+label.mini-star {
+  color: #FFC107;
+}
+
+label.mini-star-secret {
+  color: #ffffff;
+}
+
 label.star:before {
   margin: 5px;
   font-size: 1.5em;
@@ -137,4 +171,47 @@ label.star:hover~label.star:before {
 
 label.star:hover:before:not([disbled]) {
   color: #FFC107;
+}
+
+#customBtn {
+  display: inline-block;
+  background: white;
+  color: #444;
+  width: 190px;
+  border-radius: 5px;
+  border: thin solid #888;
+  box-shadow: 1px 1px 1px grey;
+  white-space: nowrap;
+}
+
+#customBtn:hover {
+  cursor: pointer;
+}
+
+#customBtn {
+  text-decoration: none !important;
+}
+
+span.label {
+  font-family: serif;
+  font-weight: normal;
+}
+
+span.icon {
+  background: url('https://res.cloudinary.com/dpar6bmfd/image/upload/v1656010821/assets/btn_google_light_normal_ios_ecuddg.svg') transparent 5px 50% no-repeat;
+  display: inline-block;
+  vertical-align: middle;
+  width: 42px;
+  height: 42px;
+}
+
+span.buttonText {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 42px;
+  padding-right: 42px;
+  font-size: 14px;
+  font-weight: bold;
+  /* Use the Roboto font that is loaded in the <head> */
+  font-family: 'Roboto', sans-serif;
 }

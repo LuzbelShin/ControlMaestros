@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="col-2">
-                <button type="submit" class="btn btn-primary py-auto" style="float: right;">
+                <button id="saveButton" type="submit" class="btn btn-primary py-auto" style="float: right;">
                     Guardar
                 </button>
             </div>
@@ -31,7 +31,9 @@
                         <th id="10" class="th-text" scope="row" style="text-align:center width:10%">07:00-08:00</th>
 
                         <td id="field11" style="width:18%">
-                            <a id="btn11" class="btn btn-secret btn-occupied"></a>
+                            <input type="checkbox" id="btn11" class="star btn-secret btn-occupied">
+                            <label for="btn11" class="fas fa-star star mt-2  pr-2"
+                                        id="lbtn11"></label>
                         </td>
                         <td id="field12" style="width:18%">
                             <a href="" id="btn12" class="btn btn-secret btn-free"></a>
@@ -281,15 +283,16 @@
     </div>
 </form>
 <script>
+
     //1
-    $('#btn11').on('click', function (e) {
-        e.preventDefault();
-        if($('#btn11').hasClass('btn-occupied') || $('#btn11').hasClass('btn-occupied-selected')){
-            $('#btn11').toggleClass('btn-occupied btn-occupied-selected');
-        }else{
-            $('#btn11').toggleClass('btn-free btn-selected');
-        }
-    });
+    //$('#btn11').on('click', function (e) {
+        //e.preventDefault();
+        //if($('#btn11').hasClass('btn-occupied') || $('#btn11').hasClass('btn-occupied-selected')){
+          //  $('#btn11').toggleClass('btn-occupied btn-occupied-selected');
+        //}else{
+        //    $('#btn11').toggleClass('btn-free btn-selected');
+      //  }
+    //});
     $('#btn12').on('click', function (e) {
         e.preventDefault();
         $('#btn12').toggleClass('btn-free btn-selected');
