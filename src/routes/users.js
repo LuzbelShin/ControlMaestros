@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Schedule = require('../models/Schedule');
 const passport = require('passport');
 
 const { isAuthenticated } = require('../helpers/auth');
@@ -93,9 +94,13 @@ router.post('/signup', async (req, res) => {
             // errors.push({ text: 'The email is already in use' });
             // res.render('users/login/signup', { errors, name, last_name, second_last_name });
         } else {
-            const newUser = new User({ name, last_name, second_last_name, username, password});
+            const newUser = new User({ name, last_name, second_last_name, username, password });
             newUser.password = await newUser.encryptPassword(password);
             await newUser.save();
+            const user = newUser.id;
+            const date = Date.now();
+            const schedule = new Schedule( { user, date });
+            await schedule.save();
             req.flash('success_msg', 'Ha sido registrado');
             res.redirect('/login')
         }
@@ -105,13 +110,17 @@ router.post('/signup', async (req, res) => {
 /**
  * Log out
  */
-router.get('/logout', (req, res) => {
-    req.logOut();
+router.get('/logout', async (req, res) => {
+    req.logOut(function(err) {
+        if (err) { 
+          return next(err); 
+          }
     res.redirect('/');
+    });
 });
 
 /**
- * Render Profile, validations for degree and date maybe could be optimized
+ * Render Profile
  */
 router.get('/profile/:id', isAuthenticated, async (req, res) => {
     const user = await User.findById(req.user.id);

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0c231e;">
     <div class="container">
         <a class="navbar-brand" href="/">Servicios Docentes</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
@@ -24,9 +24,11 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="/profile/{{user.id}}">Perfil</a>
-                            <a class="dropdown-item" <!--href="/schedule" -->Horario</a>
                             {{#if (admin user)}}
+                            <a class="dropdown-item" href="/schedules">Horarios</a>
                             <a class="dropdown-item" href="/email/{{user.id}}">Enviar correo</a>
+                            {{else}}
+                            <a class="dropdown-item" href="/schedule/{{user.id}}">Horario</a>
                             {{/if}}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/logout">Salir</a>

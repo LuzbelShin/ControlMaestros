@@ -1,0 +1,75 @@
+<div class="card">
+    <div class="card-header">
+        <div class="container">
+            <div class="row">
+                <div class="col col-4">
+                    <h3>Ciclo {{period}}</h3>
+                </div>
+                <div class="col col-6">
+                    <div class="col-6">
+                        <form action="/schedules" method="post">
+                            <div class="row">
+                                <div class="col col-10">
+                                    <select name="period" class="form-control" id="period">
+                                        {{#each periods}}
+                                        <option value="{{this}}" id="{{@index}}">{{this}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                                <div class="col col-1">
+                                    <button class="btn btn-custom" type="submit" id="loadPeriod"
+                                        title="Actualizar">Actualizar</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <label class="switch">
+                        <input type="checkbox" id="hiddenMenu">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+            <div class="row mt-2" id="hiddenMenuContainer">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="cards ml-1 mr-1">
+        {{#each schedules}}
+        <a class="btn-custom cardInfo mx-2 my-2 btn" href='/schedule/{{this.[1]}}/{{this.[0]}}'>{{this.[2]}}</a>
+        {{/each}}
+    </div>
+</div>
+<script>
+    $('#hiddenMenu').on('change', function (e) {
+        if ($('#hiddenMenu').is(':checked')) {
+            div = `
+                <div class="row mt-2" id="hiddenMenuContainer">
+                    <div class="col col-9 float-start">
+                        <form action="/schedules" method="post" id="periodForm">
+                            <div class="row">
+                                <div class="col-3">
+                                    <input type="text" class="form-control" name="periodInput" id="periodInput" placeholder="Ciclo escolar" value="{{schedules.[0].[2]}}">
+                                </div>
+                                <div class="col-2">
+                                    <button class="btn btn-custom" id="savePeriod" form="periodForm" title="Cambiar ciclo escolar">Cambiar</button>
+                                </div>       
+                            </div>    
+                        </form>
+                    </div>
+                </div>
+            `;
+            $('#hiddenMenuContainer').replaceWith($(div));
+        } else if ($('#hiddenMenu').not(':checked')) {
+            div = `
+                <div class="row mt-2" id="hiddenMenuContainer">
+                    
+                </div>
+            `;
+            $('#hiddenMenuContainer').replaceWith($(div));
+        }
+    });
+</script>

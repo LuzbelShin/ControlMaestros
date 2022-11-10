@@ -39,8 +39,8 @@ const hbs = exphbs.create({
         },
         admin: function(value){
             return value.admin == true;
-        }
-    }
+        },
+       }
 });
 
 app.engine('.hbs', hbs.engine);

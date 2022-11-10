@@ -10,13 +10,13 @@
                 </div>
                 <form action="/profile/edit/{{user.id}}?_method=put" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="_method" value="put">
-                    <button class="btn btn-primary btn-block my-2" id="inputProfileP">
+                    <button class="btn btn-custom btn-block my-2" id="inputProfileP">
                         Cambiar foto de perfil
                     </button>
-                    <button type="submit" class="btn btn-primary btn-block" id="saveChanges">
+                    <button type="submit" class="btn btn-custom btn-block" id="saveChanges">
                         Guardar cambios
                     </button>
-                    <a href="/profile/{{user.id}}" class="btn btn-danger btn-block" id="abort">
+                    <a href="/profile/{{user.id}}" class="btn btn-danger btn-block" style="color: #FFFFFF; id="abort">
                         Cancelar
                     </a>
             </div>
@@ -289,11 +289,11 @@
                                 {{/if}}
                                 {{#if (maestria study_degree)}}
                                 <option value="Maestria" selected>
-                                    Maestria
+                                    Maestr&iacute;a
                                 </option>
                                 {{else}}
                                 <option value="Maestria">
-                                    Maestria
+                                    Maestr&iacute;a
                                 </option>
                                 {{/if}}
                                 {{#if (doctorado study_degree)}}
