@@ -1,0 +1,23 @@
+<div class="card">
+    <div class="card-header">
+        <div class="container">
+            <div class="row">
+                <div class="col col-4">
+                    <h3>Maestros</h3>
+                </div>
+    </div>
+    <div class="cards cards-profile ml-1 mr-1">
+        {{#each profiles}}
+        <a class="btn-custom cardInfo mx-2 my-2 btn" href='/profile/{{this.[0]}}'>
+            <div class="row">
+                <div class="col col-2">
+                    <img src={{this.[2]}} class="rounded-circle navbar">
+                </div>
+                <div class="col col-10">
+                    {{this.[1]}}
+                </div>
+            </div>
+        </a>
+        {{/each}}
+    </div>
+</div>

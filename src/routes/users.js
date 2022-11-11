@@ -42,10 +42,10 @@ router.get('/login/google', passport.authenticate('auth.google', {
     session: false,
 }));
 
-router.get('/oauth2/redirect/google', passport.authenticate('auth.google', { 
+router.get('/oauth2/redirect/google', passport.authenticate('auth.google', {
     successRedirect: '/',
-    failureRedirect: '/login', 
-    failureMessage: true 
+    failureRedirect: '/login',
+    failureMessage: true
 }));
 /**
  * Sign up render
@@ -97,9 +97,9 @@ router.post('/signup', async (req, res) => {
             const newUser = new User({ name, last_name, second_last_name, username, password });
             newUser.password = await newUser.encryptPassword(password);
             await newUser.save();
-            const user = newUser.id;
+            const admi = newUser.id;
             const date = Date.now();
-            const schedule = new Schedule( { user, date });
+            const schedule = new Schedule({ admi, date });
             await schedule.save();
             req.flash('success_msg', 'Ha sido registrado');
             res.redirect('/login')
@@ -111,11 +111,11 @@ router.post('/signup', async (req, res) => {
  * Log out
  */
 router.get('/logout', async (req, res) => {
-    req.logOut(function(err) {
-        if (err) { 
-          return next(err); 
-          }
-    res.redirect('/');
+    req.logOut(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect('/');
     });
 });
 
@@ -123,9 +123,20 @@ router.get('/logout', async (req, res) => {
  * Render Profile
  */
 router.get('/profile/:id', isAuthenticated, async (req, res) => {
-    const user = await User.findById(req.user.id);
+    const admi = await User.findById(req.user.id);
+    let id;
+    if (!admi.admin) {
+        id = req.user.id;
+    } else {
+        id = req.params.id;
+    }
+    const user = await User.findById(id);
+    console.log(admi)
+    console.log(user)
     const { degree, email } = validation(user);
-    res.render('users/profile/profile', { degree, email });
+    
+        res.render('users/profile/profile', { admi, user, degree, email });
+    
 });
 
 /** 
@@ -133,10 +144,10 @@ router.get('/profile/:id', isAuthenticated, async (req, res) => {
  * 
  */
 router.get('/profile/edit/:id', isAuthenticated, async (req, res) => {
-    const user = await User.findById(req.user.id);
-    const { degree, email } = validation(user);
-    var firsttime = firstTime(user);
-    res.render('users/profile/edit_profile', { user, degree, firsttime, email });
+    const admi = await User.findById(req.user.id);
+    const { degree, email } = validation(admi);
+    var firsttime = firstTime(admi);
+    res.render('users/profile/edit_profile', { admi, degree, firsttime, email });
 
 });
 
@@ -150,9 +161,9 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     } = req.body;
     const id = req.user.id;
 
-    const user = await User.findById(id);
+    const admi = await User.findById(id);
 
-    var firsttime = firstTime(user);
+    var firsttime = firstTime(admi);
     var favorite_email = favoriteEmail(email_i, email_p, email_personal, check_email_i, check_email_p, check_email_personal);
     const errors = [];
 
@@ -187,7 +198,7 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
 
         await User.findByIdAndUpdate(req.params.id, { imageURL, public_id });
         await fs.unlink(file.path);
-        const onlyImage = '/profile/edit/' + user._id;
+        const onlyImage = '/profile/edit/' + admi._id;
         res.redirect(onlyImage);
     }
     if (errors.length > 0) {
@@ -210,10 +221,15 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
                 email_i, email_p, email_personal, admission, profile, study_degree, favorite_email
             });
         }
-        let profileLink = '/profile/' + user._id;
+        let profileLink = '/profile/' + admi._id;
         req.flash('success_msg', 'Cambios realizados exitosamente');
         res.redirect(profileLink);
     }
+});
+
+router.get('/profiles', isAuthenticated, async (req, res) => {
+    const profiles = await getProfiles();
+    res.render('users/profile/profiles', profiles);
 });
 
 function validation(user) {
@@ -310,6 +326,36 @@ function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_em
         }
     }
     return favorite_email;
+}
+
+async function getProfiles() {
+    const aux = await User.find();
+
+    let profiles = [];
+    await Promise.all(aux.map(async (element) => {
+        let person = [];
+        if (!element.admin) {
+            const id = element.id;
+            const name = await getName(id);
+            const imageURL = element.imageURL;
+            person.push(id);
+            person.push(name);
+            person.push(imageURL);
+            profiles.push(person);
+        }
+    }));
+
+    return { profiles };
+}
+
+/**
+ * Regresa el nombre completo de un usuario
+ * @returns Nombre
+ */
+async function getName(id) {
+    const user = await User.findById(id);
+    const name = user.name + ' ' + user.last_name + ' ' + user.second_last_name;
+    return name;
 }
 
 module.exports = router;

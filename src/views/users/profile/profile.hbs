@@ -5,6 +5,9 @@
         </h3>
         <div class="row">
             <div class="col-sm-5 ">
+                {{#if (admin admi)}}
+                <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil"></img>
+                {{else}}
                 <form action="/profile/edit/{{user.id}}" method="get">
                     <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil">
                     </img>
@@ -12,6 +15,7 @@
                         Editar perfil
                     </button>
                 </form>
+                {{/if}}
             </div>
             <div class="col">
                 <div class="card-body">
@@ -64,7 +68,7 @@
                             <input type="email" class="form-control my-1" value="{{user.email_i}}" readonly disabled>
                         </div>
                         <div>
-                            <a>Correo Plantel  </a>
+                            <a>Correo Plantel </a>
                             {{#if email.[1]}}
                             <label id="ministarIns" class="fas fa-star mini-star"></label>
                             {{else}}
