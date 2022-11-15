@@ -1,23 +1,40 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header mb-2">
         <div class="container">
             <div class="row">
                 <div class="col col-4">
                     <h3>Maestros</h3>
                 </div>
-    </div>
-    <div class="cards cards-profile ml-1 mr-1">
-        {{#each profiles}}
-        <a class="btn-custom cardInfo mx-2 my-2 btn" href='/profile/{{this.[0]}}'>
-            <div class="row">
-                <div class="col col-2">
-                    <img src={{this.[2]}} class="rounded-circle navbar">
-                </div>
-                <div class="col col-10">
-                    {{this.[1]}}
-                </div>
             </div>
-        </a>
-        {{/each}}
+        </div>
+    </div>
+    <div class="container">
+        <div class="cards cards-profile mx-1 my-2">
+            {{#each profiles}}
+            <a class="btn-custom cardInfo my-1 mx-1 btn" href='/profile/{{this.[0]}}'>
+                <div class="row">
+                    <div class="col col-2">
+                        <img src={{this.[1]}} class="rounded-circle navbar">
+                    </div>
+                    <div class="col col-8">
+                        {{#if this.[2]}}
+                        <div class="ml-1 mt-0 mb-1">
+                            <div class="col">
+                                {{this.[3]}}
+                            </div>
+                            <div class="col">
+                                {{this.[4]}}
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="col ml-1 mt-2">
+                            {{this.[3]}}
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </a>
+            {{/each}}
+        </div>
     </div>
 </div>

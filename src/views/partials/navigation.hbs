@@ -7,6 +7,26 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
+                {{#if user}}
+                {{#if (admin user)}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/profiles">Maestros</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/schedules">Horarios</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/email">Correos</a>
+                </li>
+                {{else}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/profile/{{user.id}}">Perfil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/schedule/{{user.id}}">Horario</a>
+                </li>
+                {{/if}}
+                {{/if}}
                 <li class="nav-item">
                     <a class="nav-link" href="/about">Acerca de</a>
                 </li>
@@ -23,7 +43,7 @@
                             {{#if (admin user)}}
                             <a class="dropdown-item" href="/profiles">Maestros</a>
                             <a class="dropdown-item" href="/schedules">Horarios</a>
-                            <a class="dropdown-item" href="/email/{{user.id}}">Enviar correo</a>
+                            <a class="dropdown-item" href="/email">Enviar correo</a>
                             {{else}}
                             <a class="dropdown-item" href="/profile/{{user.id}}">Perfil</a>
                             <a class="dropdown-item" href="/schedule/{{user.id}}">Horario</a>

@@ -1,17 +1,35 @@
-<div class="container">
-    <div class="jumbotron mt-4" style="background-color: #FFFFFF;">
-        <h3 class="card-title mx-auto my-auto py-auto" style="width: 200px;">
-            Perfil
-        </h3>
+    <div class="card    " style="background-color: #FFFFFF;">
+        <div class="card-header mx-0 row">
+            <div class="text-center" style="float: left;">
+                {{#if (admin user)}}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-1">
+                            <div class="col-1">
+                                <a href="/profiles" class="large previous round">&#8249;</a>
+                            </div>
+                        </div>
+                        <div class="card-title mx-auto my-auto py-auto" style="width: 200px;">
+                            <h3>Perfil</h3>
+                        </div>
+                    </div>
+                </div>
+                {{else}}
+                <div class="card-title mx-auto my-auto py-auto" style="width: 200px;">
+                    <h3>Perfil</h3>
+                </div>
+                {{/if}}
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-5 ">
-                {{#if (admin admi)}}
-                <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil"></img>
+                {{#if (admin user)}}
+                <img src="{{imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil"></img>
                 {{else}}
                 <form action="/profile/edit/{{user.id}}" method="get">
-                    <img src="{{user.imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil">
+                    <img src="{{imageURL}}" class="rounded center mt-4 mb-3" alt="Imagen de perfil">
                     </img>
-                    <button type="submit" class="btn btn-custom btn-block my-2">
+                    <button type="submit" class="btn btn-custom btn-block ml-4 my-2">
                         Editar perfil
                     </button>
                 </form>
@@ -21,32 +39,31 @@
                 <div class="card-body">
                     <div>
                         <a>Nombre</a>
-                        <input type="text" class="form-control my-1" value="{{user.name}}" readonly disabled>
+                        <input type="text" class="form-control my-1" value="{{name}}" readonly disabled>
                     </div>
                     <div>
                         <a>Apellido paterno</a>
-                        <input type="text" class="form-control my-1" value="{{user.last_name}}" readonly disabled>
+                        <input type="text" class="form-control my-1" value="{{lastName}}" readonly disabled>
                     </div>
                     <div>
                         <a>Apellido materno</a>
-                        <input type="text" class="form-control my-1" value="{{user.second_last_name}}" readonly
-                            disabled>
+                        <input type="text" class="form-control my-1" value="{{sLastName}}" readonly disabled>
                     </div>
                     <div>
                         <a>N&uacute;mero telef&oacute;nico</a>
-                        <input type="tel" class="form-control my-1" value="{{user.phone}}" readonly disabled>
+                        <input type="tel" class="form-control my-1" value="{{phone}}" readonly disabled>
                     </div>
                     <div>
                         <a>Direcci&oacute;n</a>
-                        <input type="text" class="form-control my-1" value="{{user.address}}" readonly disabled>
+                        <input type="text" class="form-control my-1" value="{{address}}" readonly disabled>
                     </div>
                     <div>
                         <a>Curp</a>
-                        <input type="text" class="form-control my-1" value="{{user.curp}}" readonly disabled>
+                        <input type="text" class="form-control my-1" value="{{curp}}" readonly disabled>
                     </div>
                     <div>
                         <a>RFC</a>
-                        <input type="text" class="form-control my-1" value="{{user.rfc}}" readonly disabled>
+                        <input type="text" class="form-control my-1" value="{{rfc}}" readonly disabled>
                     </div>
                 </div>
             </div>
@@ -65,7 +82,7 @@
                             {{else}}
                             <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
                             {{/if}}
-                            <input type="email" class="form-control my-1" value="{{user.email_i}}" readonly disabled>
+                            <input type="email" class="form-control my-1" value="{{email_i}}" readonly disabled>
                         </div>
                         <div>
                             <a>Correo Plantel </a>
@@ -74,7 +91,7 @@
                             {{else}}
                             <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
                             {{/if}}
-                            <input type="email" class="form-control my-1" value="{{user.email_p}}" readonly disabled>
+                            <input type="email" class="form-control my-1" value="{{email_p}}" readonly disabled>
                         </div>
                         <div>
                             <a>Correo Personal </a>
@@ -83,8 +100,7 @@
                             {{else}}
                             <label id="ministartPla" class="fas fa-star mini-star-secret"></label>
                             {{/if}}
-                            <input type="email" class="form-control my-1" value="{{user.email_personal}}" readonly
-                                disabled>
+                            <input type="email" class="form-control my-1" value="{{email_personal}}" readonly disabled>
                         </div>
                     </div>
                 </div>
@@ -97,11 +113,11 @@
                     <div class="card-body ml-0 pt-1">
                         <div>
                             <a class="">Fecha de ingreso: </a>
-                            <input type="text" class="form-control my-1" value="{{user.admission}}" readonly disabled>
+                            <input type="text" class="form-control my-1" value="{{admission}}" readonly disabled>
                         </div>
                         <div>
                             <a class="">Perfil Principal: </a>
-                            <input type="text" class="form-control my-1" value="{{user.profile}}" readonly disabled>
+                            <input type="text" class="form-control my-1" value="{{profile}}" readonly disabled>
                         </div>
                         <div>
                             <a class="">Grado máximo de estudios: </a>
@@ -146,4 +162,3 @@
             </div>
         </div>
     </div>
-</div>

@@ -7,13 +7,13 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-router.get('/email/:id', isAuthenticated, async (req, res) => {
+router.get('/email', isAuthenticated, async (req, res) => {
     const id = req.user.id;
     const user = await User.findById(id);
 
     if(user['admin']){
         res.render('users/activities/mail');
-    }else{
+    } else{
         res.redirect('/');
     }
 });

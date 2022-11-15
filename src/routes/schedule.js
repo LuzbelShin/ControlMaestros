@@ -8,70 +8,6 @@ const router = express.Router();
 const User = require('../models/User');
 const Schedule = require('../models/Schedule');
 
-router.get('/schedules', isAuthenticated, async (req, res) => {
-    const schedules = await Schedules(null);
-    res.render('users/activities/schedules', schedules);
-});
-
-router.post('/schedules', isAuthenticated, async (req, res) => {
-    const { periodInput, period } = req.body;
-    if (periodInput != null) {
-        if (periodInput.length > 0 && /^(Ago||Feb)\s(Ene||Jul)\s20\d\d$/.test(periodInput)) {
-            await setPeriod(periodInput);
-            res.redirect('/schedules');
-        } else {
-            req.flash('error_msg', 'Favor de escribir correctamente el ciclo.');
-            res.redirect('/schedules');
-        }
-    } else if (period != null) {
-        const schedules = await Schedules(period);
-        res.render('users/activities/schedules', schedules);
-    }
-});
-
-/**
- * Muestra la página del horario.
- */
-router.get('/schedule/:id/:id2', isAuthenticated, async (req, res) => {
-    let id2 = req.params.id2;
-    const user = await Schedule.findById(id2);
-    const fields = await scheduleInfo(user);
-    res.render('users/activities/schedule', fields);
-});
-
-/**
- * Para imprimir
- */
-router.post('/schedule/print/:id/:id2', isAuthenticated, async (req, res) => {
-    const id = req.params.id2;
-    //const user = await Schedule.findOne({ user: id });
-    const user = await Schedule.findById(id);
-
-    let data = await printData(user);
-    let fileName =  Math.round(Date.now() / 1000) + '.pdf';
-    try {
-
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-
-        const content = await compile('printSchedule.hbs', data)
-
-        await page.setContent(content)
-        await page.pdf({
-            path: path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName),
-            format: 'A4',
-            landscape: true,
-            printBackground: true
-        });
-        
-        res.download(path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName), function (){
-            fs.unlink(path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName));
-        });
-    } catch (e) {
-        console.log(e)
-    }
-});
-
 /**
  * Muestra la página del horario.
  */
@@ -196,6 +132,85 @@ router.post('/schedule/final/:id', isAuthenticated, async (req, res) => {
     await Schedule.findByIdAndUpdate(user.id, { final, temporal });
     let link = '/schedule/' + id;
     res.redirect(link);
+});
+
+/**
+ * Despliega una pagina que muestra todos los horarios que son permanentes. Por defecto muestra los horarios del ciclo actual.
+ * Al hacer click sobre el nombre del usuario se navega hasta el horario y se despliega.
+ */
+router.get('/schedules', isAuthenticated, async (req, res) => {
+    const user = await User.findById(req.user.id);
+
+    if(user['admin']){
+        const schedules = await Schedules(null);
+        res.render('users/activities/schedules', schedules);
+    } else{
+        res.redirect('/');
+    }
+});
+
+/**
+ * Cambia el ciclo escolar al especificado.
+ * 
+ * Actualiza la página con los horarios del ciclo seleccionado.
+ */
+router.post('/schedules', isAuthenticated, async (req, res) => {
+    const { periodInput, period } = req.body;
+    if (periodInput != null) {
+        if (periodInput.length > 0 && /^(Ago||Feb)\s(Ene||Jul)\s20\d\d$/.test(periodInput)) {
+            await setPeriod(periodInput);
+            res.redirect('/schedules');
+        } else {
+            req.flash('error_msg', 'Favor de escribir correctamente el ciclo.');
+            res.redirect('/schedules');
+        }
+    } else if (period != null) {
+        const schedules = await Schedules(period);
+        res.render('users/activities/schedules', schedules);
+    }
+});
+
+/**
+ * 
+ * Despliega un html para visualizar de manera diferente el horario especificado.
+ * 
+router.get('/schedule/:id/:id2', isAuthenticated, async (req, res) => {
+    let id2 = req.params.id2;
+    const user = await Schedule.findById(id2);
+    const fields = await scheduleInfo(user);
+    res.render('users/activities/schedule', fields);
+});
+*/
+/**
+ * Genera y descarga un documento PDF que contiene el horario especificado.
+ */
+router.post('/schedule/print/:id/:id2', isAuthenticated, async (req, res) => {
+    const id = req.params.id2;
+    const user = await Schedule.findById(id);
+
+    let data = await printData(user);
+    let fileName =  Math.round(Date.now() / 1000) + '.pdf';
+    try {
+
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+
+        const content = await compile('printSchedule.hbs', data)
+
+        await page.setContent(content)
+        await page.pdf({
+            path: path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName),
+            format: 'A4',
+            landscape: true,
+            printBackground: true
+        });
+        
+        res.download(path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName), function (){
+            fs.unlink(path.join('src', 'views', 'users', 'activities', 'print', 'pdfs', fileName));
+        });
+    } catch (e) {
+        console.log(e)
+    }
 });
 
 /**

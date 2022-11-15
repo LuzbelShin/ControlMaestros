@@ -1,5 +1,5 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header mb-2">
         <div class="container">
             <div class="row">
                 <div class="col col-4">
@@ -32,15 +32,15 @@
                 </div>
             </div>
             <div class="row mt-2" id="hiddenMenuContainer">
-
             </div>
         </div>
-
     </div>
-    <div class="cards ml-1 mr-1">
-        {{#each schedules}}
-        <a class="btn-custom cardInfo mx-2 my-2 btn" href='/schedule/{{this.[1]}}/{{this.[0]}}'>{{this.[2]}}</a>
-        {{/each}}
+    <div class="container">
+        <div class="cards mx-1 my-2">
+            {{#each schedules}}
+            <a class="btn-custom cardInfo my-1 mx-1 btn" href='/schedule/{{this.[1]}}/{{this.[0]}}'>{{this.[2]}}</a>
+            {{/each}}
+        </div>
     </div>
 </div>
 <script>

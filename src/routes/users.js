@@ -123,7 +123,7 @@ router.get('/logout', async (req, res) => {
  * Render Profile
  */
 router.get('/profile/:id', isAuthenticated, async (req, res) => {
-    const admi = await User.findById(req.user.id);
+    let admi = await User.findById(req.user.id);
     let id;
     if (!admi.admin) {
         id = req.user.id;
@@ -131,12 +131,8 @@ router.get('/profile/:id', isAuthenticated, async (req, res) => {
         id = req.params.id;
     }
     const user = await User.findById(id);
-    console.log(admi)
-    console.log(user)
-    const { degree, email } = validation(user);
-    
-        res.render('users/profile/profile', { admi, user, degree, email });
-    
+    let fields = profileInfo(user);
+    res.render('users/profile/profile', fields);
 });
 
 /** 
@@ -227,11 +223,26 @@ router.put('/profile/edit/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+/**
+ * Despliega una página que muestra todos los perfiles registrados, al hacer click sobre una de las tarjetas que 
+ * contiene el nombre del usuario se navega hacia un despliege de datos completo.
+ */
 router.get('/profiles', isAuthenticated, async (req, res) => {
-    const profiles = await getProfiles();
-    res.render('users/profile/profiles', profiles);
+    const user = await User.findById(req.user.id);
+    
+    if(user['admin']){
+        const profiles = await getProfiles();
+        res.render('users/profile/profiles', profiles);
+    } else{
+        res.redirect('/');
+    }
 });
 
+/**
+ * Función que ayuda al despliegue del Grado de estudios y el correo favorito.
+ * @param {*} user Usuario
+ * @returns Lista con los grados de estudio y otra lista con el correo favorito.
+ */
 function validation(user) {
     var degree = [];
     var degree1 = false;
@@ -285,6 +296,21 @@ function validation(user) {
     return { degree, email };
 }
 
+/**
+ * Función que regresa los datos del usuario. 
+ * @param {*} user Usuario
+ * @returns 
+ */
+function profileInfo(user){
+    const imageURL = user.imageURL, name = user.name, lastName = user.last_name, sLastName = user.second_last_name, phone = user.phone, address = user.address, curp = user.curp, rfc = user.rfc, email_i = user.email_i, email_p = user.email_p, email_personal = user.email_personal, admission = user.admission, profile = user.profile;
+    const { degree, email } = validation(user);
+
+    return { imageURL, name, lastName, sLastName, phone, address, curp, rfc, email_i, email_p, email_personal, admission, profile, degree, email };
+}
+
+/**
+ * Función que corrobora si es la primera vez que el usuario realiza cambios a su perfil.
+ */
 function firstTime(user) {
     const name = user.name;
     const last_name = user.last_name;
@@ -309,6 +335,16 @@ function firstTime(user) {
     return false;
 }
 
+/**
+ * Función que regresa el correo favorito para ser registrado en la BD
+ * @param {*} email_i Correo Institucional
+ * @param {*} email_p Correo Plantel
+ * @param {*} email_personal Correo Personal
+ * @param {*} check_email_i Checkbox correo institucional
+ * @param {*} check_email_p Checkbox correo plantel
+ * @param {*} check_email_personal Checkbox correo personal
+ * @returns Correo seleccionado
+ */
 function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_email_p, check_email_personal) {
     var favorite_email = '';
 
@@ -328,6 +364,10 @@ function favoriteEmail(email_i, email_p, email_personal, check_email_i, check_em
     return favorite_email;
 }
 
+/**
+ * Función que regresa todos los perfiles.
+ * @returns lista de todos los perfiles registrados.
+ */
 async function getProfiles() {
     const aux = await User.find();
 
@@ -339,8 +379,15 @@ async function getProfiles() {
             const name = await getName(id);
             const imageURL = element.imageURL;
             person.push(id);
-            person.push(name);
             person.push(imageURL);
+            if(name.length > 20){
+                person.push(true);
+                person.push(name.substr(0, name.lastIndexOf(' ')));
+                person.push(name.substr(name.lastIndexOf(' ')));
+            } else {
+                person.push(false);
+                person.push(name);
+            }
             profiles.push(person);
         }
     }));

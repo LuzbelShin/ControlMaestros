@@ -3,3 +3,4 @@ users.json
 backend
 frontend
 node_modules
+.vscode

@@ -18,9 +18,8 @@ img {
 }
 
 img.logo {
-  width: 360px;
-  height: 120px;
-  margin: 0 auto;
+  width: 200px;
+  height: 70px;
   display: block;
 }
 
@@ -35,19 +34,7 @@ img.navbar {
   width: 30%;
 }
 
-a:link {
-  color: black;
-}
-
-a:visited {
-  color: black;
-}
-
-a:hover {
-  color: black;
-}
-
-a:active {
+a:link, a:visited, a:hover, a:active {
   color: black;
 }
 
@@ -59,12 +46,8 @@ a.large:hover {
   color: white;
 }
 
-a:hover {
-  color: black;
-}
-
 .previous {
-  background-color: #0C211E;
+  background-color: #9d2449;
 }
 
 .round {
@@ -94,7 +77,9 @@ button:disabled {
 .btn-short {
   width: 100px;
 }
-
+ h3{
+  font-weight:normal
+ }
 /*
 * Switch
 */
@@ -422,6 +407,10 @@ label.star:hover:before:not([disbled]) {
   }
 }
 
+.card-header {
+  background-color: #0c231e;
+  color: #FFFFFF;
+}
 /*
 * Google Sign in Button
 */
