@@ -4,3 +4,4 @@ backend
 frontend
 node_modules
 .vscode
+webpack
